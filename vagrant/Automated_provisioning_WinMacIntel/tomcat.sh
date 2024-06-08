@@ -12,21 +12,16 @@ sudo /usr/bin/crb enable
 sudo dnf config-manager --set-enable remi
 sudo dnf update -y
 TOMURL="https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.85/bin/apache-tomcat-9.0.85.tar.gz"
-#TOMURL="https://downloads.apache.org/tomcat/tomcat-9/v9.0.85/bin/apache-tomcat-9.0.85.tar.gz"
 dnf -y install java-11-openjdk java-11-openjdk-devel
 dnf install git maven wget -y
 cd /tmp/
-#wget $TOMURL -O tomcatbin.tar.gz
 wget $TOMURL
 tar xzfv apache-tomcat-9.0.85.tar.gz
 rm -f /tmp/apache-tomcat-9.0.85.tar.gz
 
-#EXTOUT=`tar xzvf tomcatbin.tar.gz`
-#TOMDIR=`echo $EXTOUT | cut -d '/' -f1`
 mkdir /usr/local/tomcat
 useradd --home /usr/local/tomcat --shell /sbin/nologin tomcat
 cp -r /tmp/apache-tomcat-9.0.85/* /usr/local/tomcat
-#rsync -avzh /tmp/$TOMDIR/ /usr/local/tomcat/
 chown -R tomcat.tomcat /usr/local/tomcat
 
 rm -rf /etc/systemd/system/tomcat.service
@@ -71,13 +66,8 @@ systemctl start tomcat
 systemctl enable tomcat
 
 rm -rf /tmp/Aprofile-Project
-#git clone -b main https://github.com/hkhcoder/vprofile-project.git
 git clone -b main https://github.com/yobami12/Aprofile-Project.git
 cd Aprofile-Project
-#cd vprofile-project
-#sed -i s/'jdbc.username=admin'/'jdbc.username=ayobami'/g /tmp/vprofile-project/src/main/resources/application.properties
-#sed -i s/'jdbc.password=admin123'/'jdbc.password=host123'/g /tmp/vprofile-project/src/main/resources/application.properties
-#sed -i s/'test'/'ayobami'/g /tmp/vprofile-project/src/main/resources/application.properties
 mvn install
 systemctl stop tomcat
 sleep 20
@@ -88,5 +78,4 @@ systemctl start tomcat
 sleep 20
 systemctl stop firewalld
 systemctl disable firewalld
-#cp /vagrant/application.properties /usr/local/tomcat/webapps/ROOT/WEB-INF/classes/application.properties
 systemctl restart tomcat
