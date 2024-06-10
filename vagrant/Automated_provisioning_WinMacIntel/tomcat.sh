@@ -68,7 +68,7 @@ systemctl enable tomcat
 rm -rf /tmp/Aprofile-Project
 git clone -b main https://github.com/yobami12/Aprofile-Project.git
 cd Aprofile-Project
-mvn install
+mvn install || mvn install || mvn install
 systemctl stop tomcat
 sleep 20
 rm -rf /usr/local/tomcat/webapps/ROOT*

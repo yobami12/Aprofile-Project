@@ -136,11 +136,12 @@ EOF
  dnf install socat logrotate -y
  dnf install -y erlang rabbitmq-server
 
+ sudo systemctl start firewalld
+ sudo systemctl enable firewalld
  firewall-cmd --add-port=5672/tcp
  firewall-cmd --runtime-to-permanent
 sudo systemctl start rabbitmq-server
 sudo systemctl enable rabbitmq-server
-sudo systemctl status rabbitmq-server
 sudo sh -c 'echo "[{rabbit, [{loopback_users, []}]}]." > /etc/rabbitmq/rabbitmq.config'
 sudo rabbitmqctl add_user ayobami ayobami
 sudo rabbitmqctl set_user_tags ayobami administrator
