@@ -1,8 +1,8 @@
 #!/bin/bash
 DATABASE_PASS='host123'
 sudo yum update -y
-sudo yum install epel-release -y
-sudo dnf config-manager --disable epel
+#sudo yum install epel-release -y
+#sudo dnf config-manager --disable epel
 sudo dnf config-manager --disable extras
 sudo dnf clean all
 sudo dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm -y
