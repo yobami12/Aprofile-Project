@@ -1,0 +1,5 @@
+create database testscript;
+create user 'testuser' identified by 'password';
+grant all on testscript.* to testuser;
+flush privileges;
+quit

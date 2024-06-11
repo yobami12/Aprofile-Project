@@ -1,0 +1,27 @@
+---
+
+- name: configure nginx
+  hosts: all
+  become: yes
+  become_user: root
+
+  tasks:
+    - name: copy web configuration
+      copy: 
+        src: ~/static.conf
+        dest: /etc/nginx/conf.d/
+
+    - name: copy web files
+      ansible.builtin.copy: 
+        src: /var/www/html/static
+        dest: /var/www/html/
+
+    - name: change file owner
+      ansible.builtin.file:
+        path: /var/www/html/static/
+        state: directory
+        recurse: yes
+        owner: nginx
+        group: nginx
+        mode: '0755'
+

@@ -1,0 +1,22 @@
+#!/usr/bin/env python3
+import os
+
+def check_cash():
+    ngn_files = os.listdir(os.path.expanduser("~/Pos/"))
+    if ngn_files:
+        ngn1 = "\n".join([file.split(".")[0] for file in ngn_files])
+        print(f"\nPOS merchant(s) with available cash in Isolo:\n{ngn1}.")
+    else:
+        print("\nNo cash found at any POS in Isolo.")
+
+def check_cash2():
+    ngn_files = os.listdir(os.path.expanduser("~/Bank/"))
+    if ngn_files:
+        ngn = "\n".join([file.split(".")[0] for file in ngn_files])
+        print(f"\nBank(s) with available cash in Isolo:\n{ngn}.\n")
+    else:
+        print("\nNo cash found at any Bank in Isolo.\n")
+
+if __name__ == "__main__":
+    check_cash()
+    check_cash2()

@@ -1,0 +1,4 @@
+-Create the passfile for sshpass on the source machine or edit script to create the 
+passfile and remove passfile after execution.
+
+-Username and password must be constant and same on remote machines.

@@ -1,0 +1,78 @@
+---
+
+- name: deploy web server
+  hosts: all
+  become: yes
+  become_user: root
+
+  tasks:
+    - name: install epel-release
+      shell: yum install -y epel-release
+
+    - name: install yum-utils
+      shell: yum install -y yum-utils
+
+    - name: add repo
+      shell: yum install -y http://rpms.remirepo.net/enterprise/remi-release-9.rpm
+
+    - name: enable repo
+      shell: yum-config-manager --enable remi-php83
+
+    - name: update webserver instances
+      yum:
+        name: "*"
+        state: latest
+        update_cache: yes
+
+    - name: install php83
+      shell: yum install -y php83*
+
+    - name: install nginx server
+      ansible.builtin.yum:
+        name:
+          - nginx
+        state: latest
+
+    - name: configure php83 with commands
+      ansible.builtin.shell:
+        cmd: sed -i "s/user = apache/user = nginx/g" /etc/opt/remi/php83/php-fpm.d/www.conf
+        cmd: sed -i "s/group = apache/group = nginx/g" /etc/opt/remi/php83/php-fpm.d/www.conf
+        cmd: sed -i "s/listen.owner = apache/listen.owner = nginx/g" /etc/opt/remi/php83/php-fpm.d/www.conf
+        cmd: sed -i "s/listen.group = apache/listen.group = nginx/g" /etc/opt/remi/php83/php-fpm.d/www.conf
+        cmd: echo 'listen = /var/opt/remi/php83/run/php-fpm/php83-fpm.sock' >> /etc/opt/remi/php83/php-fpm.d/www.conf
+        cmd: sed -i "s/cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g" /etc/opt/remi/php83/php.ini
+
+    - name: change directory to the html directory
+      shell: cd /var/www/html
+
+    - name: download wordpress
+      get_url:
+        url: https://wordpress.org/latest.tar.gz
+        dest: /var/www/html/
+
+    - name: unzip the zip folder
+      ansible.builtin.unarchive:
+        src: /var/www/html/latest.tar.gz
+        dest: /var/www/html
+        remote_src: yes
+
+    - name: remove latest.tar.gz
+      file:
+        path: /var/www/html/latest.tar.gz
+        state: absent
+
+    - name: configure nginx
+      ansible.builtin.include_role:
+        name: nginx 
+
+    - name: start nginx
+      ansible.builtin.service:
+        enabled: yes
+        name: nginx
+        state: started
+
+    - name: start php83-php-fpm
+      ansible.builtin.service:
+        enabled: yes
+        name: php83-php-fpm
+        state: started

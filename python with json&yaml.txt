@@ -1,0 +1,65 @@
+PYTHON
+
+print("Hello World")  (will print 'Hello World')
+print("")   (prints empty space. Can be used as separator)
+print("this is my first python sting")   (same as above)
+
+VARS
+skill="DevOPs"
+print(skill)
+NUM=123
+print(NUM)
+
+LISTS
+tools=["Jenkins", "Docker", "K8s", "Terraform", 90]
+print(tools)
+print(tools[0])     (will return Jenkins from the list)
+print(tools[-1])    (will return 90 form the list)
+print(tools[1:4])   (will return Docker, K8s, Terraform)
+print(tools[1:4][1]) (will return K8s)
+
+
+TUPLE
+tools=("Jenkins", "Docker", "K8s", "Terraform", 90)
+print(tools)
+
+
+DICTIONARY
+devops={"skill":"DevOps", "Year":2023, "Tech":"", "GitOps":''}
+print(devops)
+print(devops["skill"])    (will return DevOps which is value of key skill)
+print(devops["skill"][0]) (will return only D in DevOps)
+
+devops={"skill":"DevOps", "Year":2023, "Tech":{"Cloud":"AWS", "Containers":"K8s", "CICD":"Jenkins"} }
+devops={"skill":"DevOps", "Year":2023, "Tech":{"Cloud":"AWS", "Containers":"K8s", "CICD":"Jenkins", "GitOps":["Gitlab", "ArgoCD", "Tekton"]} }
+
+JSON (the above in JSON format)
+devops={
+        "skill":"DevOps",
+        "Year":2023,
+        "Tech":
+            {
+              "Cloud":"AWS",
+              "Containers":"K8s",
+              "CICD":"Jenkins",
+              "GitOps":
+                  [
+                    "Gitlab", 
+                    "ArgoCD", 
+                    "Tekton"
+                  ]
+             }
+    }
+
+YAML (the above in YAML format)
+devops:
+  skill: DevOps
+  Year: 2023
+  Tech:
+     Cloud: AWS
+     Containers: K8s
+     CICD: Jenkins
+     GitOps:
+        - Gitlab 
+        - ArgoCD 
+        - Tekton

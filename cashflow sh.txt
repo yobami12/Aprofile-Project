@@ -1,0 +1,22 @@
+#!/bin/bash
+check_cash() {
+ls ~/Pos/*.ngn > /dev/null 2>&1
+        if [ "$?" -eq "0" ]; then
+                echo -e " \nPOS merchant(s) with available cash in Isolo:\n$NGN1."
+        else
+                echo -e " \nNo cash found at any POS in Isolo."
+        fi
+NGN1=`find ~/Pos/*.ngn 2>/dev/null | cut -d/ -f4 | cut -d. -f1`
+}
+check_cash
+
+check_cash2() {
+ls ~/Bank/*.ngn > /dev/null 2>&1
+        if [ "$?" -eq "0" ]; then
+                echo -e " \nBank(s) with available cash in Isolo:\n$NGN.\n "
+        else
+                echo -e " \nNo cash found at any Bank in Isolo.\n "
+        fi
+NGN=`find ~/Bank/*.ngn 2>/dev/null | cut -d/ -f4 | cut -d. -f1`
+}
+check_cash2
