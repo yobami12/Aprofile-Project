@@ -1,0 +1,4 @@
+-multios_websetup.sh has the web setup configuration and automation
+
+-webdeploy.sh is a script that pushes multios_websetup.sh to thousands of servers 
+listed in the remhostip file and executes it.
