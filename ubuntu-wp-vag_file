@@ -52,5 +52,6 @@ EOF
    sudo -u www-data sed -i 's/password_here/admin123/' /srv/www/wordpress/wp-config.php
    systemctl restart mysql
    systemctl restart apache2
+   echo "This is the last line"
    SHELL
 end
