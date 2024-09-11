@@ -14,6 +14,6 @@ dnf install -y erlang rabbitmq-server
 systemctl enable rabbitmq-server
 systemctl start rabbitmq-server
 sudo sh -c 'echo "[{rabbit, [{loopback_users, []}]}]." > /etc/rabbitmq/rabbitmq.config'
-sudo rabbitmqctl add_user test test
-sudo rabbitmqctl set_user_tags test administrator
+sudo rabbitmqctl add_user ayobami ayobami
+sudo rabbitmqctl set_user_tags ayobami administrator
 sudo systemctl restart rabbitmq-server
