@@ -3,8 +3,8 @@ DATABASE_PASS='host123'
 sudo yum update -y
 #sudo yum install epel-release -y
 sudo yum install git zip unzip -y
-#sudo dnf install mariadb105-server -y
-sudo dnf install mariadb-server -y
+sudo dnf install mariadb105-server -y
+#sudo dnf install mariadb-server -y
 # starting & enabling mariadb-server
 sudo systemctl start mariadb
 sudo systemctl enable mariadb
