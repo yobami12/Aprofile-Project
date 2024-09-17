@@ -1,0 +1,32 @@
+version: 0.2
+
+#env:
+  #variables:
+     # key: "value"
+     # key: "value"
+  #parameter-store:
+     # key: "value"
+     # key: "value"
+
+phases:
+  install:
+   runtime-versions:
+      java: corretto17
+  pre_build:
+    commands:
+      - apt-get update
+      - apt-get install -y jq 
+      - wget https://archive.apache.org/dist/maven/maven-3/3.9.8/binaries/apache-maven-3.9.8-bin.tar.gz
+      - tar xzf apache-maven-3.9.8-bin.tar.gz
+      - ln -s apache-maven-3.9.8 maven
+
+  build:
+    commands:
+      - mvn install
+  post_build:
+    commands:
+       - mvn package
+artifacts:
+  files:
+     - '**/*'
+  base-directory: 'target/Aprofile-v2'
