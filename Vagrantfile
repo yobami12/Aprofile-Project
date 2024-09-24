@@ -6,7 +6,8 @@ Vagrant.configure("2") do |config|
      vb.memory = "2048"
    end
    config.vm.provision "shell", inline: <<-SHELL
-   sudo apt-get update
+#Install docker for ubuntu from documentation. check documentation for centos/other OSes   
+sudo apt-get update
 sudo apt-get install \
     ca-certificates \
     curl \
