@@ -18,7 +18,7 @@ pipeline {
   stages {
     stage('Fetch code'){
       steps {
-        git branch: 'docker-ci', url: ''
+        git branch: 'docker-ci', url: 'https://github.com/yobami12/Aprofile-Project.git'
       }
     }
 
@@ -72,7 +72,7 @@ pipeline {
        steps {
        
          script {
-                dockerImage = docker.build( appRegistry + ":$BUILD_NUMBER", "./Docker-files/app/multistage/")
+                dockerImage = docker.build( appRegistry + ":$BUILD_NUMBER", "./")
              }
 
      }
