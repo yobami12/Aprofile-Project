@@ -9,8 +9,8 @@ pipeline {
         registryCredential = 'ecr:eu-west-2:jenkinsiamcred'
         appRegistry = "742289042509.dkr.ecr.eu-west-2.amazonaws.com/aydockerecr"
         aprofileRegistry = "https://742289042509.dkr.ecr.eu-west-2.amazonaws.com"
-        cluster = "aydockerecs"
-        service = "aydockerecsservice"
+        cluster = "ayECS"
+        service = ""
         //'registryCredentials'= your region and created Jenkins aws credential on Jenkins webpage
         //copy and add your created ecr uri abv: 'appRegistry' and 'vprofileRegistry
         // This is a comment: both values above are same with removal of /* for first and input of 'https' for secnd
