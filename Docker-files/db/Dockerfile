@@ -4,7 +4,6 @@ LABEL "Author"="Ayobami"
 
 ENV MYSQL_ROOT_PASSWORD="host123"
 ENV MYSQL_DATABASE="accounts"
-ENV MYSQL_USER="root"
 
 
 ADD db_backup.sql docker-entrypoint-initdb.d/db_backup.sql
