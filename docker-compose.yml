@@ -1,0 +1,48 @@
+version: '3.8'
+services:
+  db01:
+    build:
+      context: ./Docker-files/db
+    image: ayobamintl/dbimg
+    container_name: db01
+    ports:
+      - "3306:3306"
+    volumes:
+      - ayappdbdata:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=host123
+
+  mc01:
+    image: memcached
+    ports:
+      - "11211:11211"
+
+  rmq01:
+    image: rabbitmq
+    ports:
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=ayobami
+      - RABBITMQ_DEFAULT_PASS=ayobami
+  
+  app01:
+    build:
+      context: ./Docker-files/app
+    image: ayobamintl/appimg
+    container_name: app01
+    ports:
+      - "8080:8080"
+    volumes:
+      - ayappdata:/usr/local/tomcat/webapps
+
+  web01:
+    build:
+      context: .Docker-files/web
+    image: ayobamintl/web01
+    container_name: web01
+    ports:
+      - "80:80"
+
+volumes:
+  ayappdbdata: {}
+  ayappdata: {}
