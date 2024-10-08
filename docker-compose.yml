@@ -14,11 +14,13 @@ services:
 
   mc01:
     image: memcached
+    container_name: mc01
     ports:
       - "11211:11211"
 
   rmq01:
     image: rabbitmq
+    container_name: rmq01
     ports:
       - "15672:15672"
     environment:
