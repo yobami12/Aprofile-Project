@@ -30,7 +30,7 @@ services:
   
   app01:
     build:
-      context: ./Docker-files/app
+      context: ./Docker-files/app/multistage
     image: ayobamintl/appimg
     container_name: app01
     ports:
