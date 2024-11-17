@@ -1,16 +1,29 @@
 Vagrant.configure("2") do |config|
-  config.vm.box = "ubuntu/focal64"
-   config.vm.network "private_network", ip: "192.168.56.82"
-   config.vm.network "public_network"
-   config.vm.provider "virtualbox" do |vb|
-     vb.memory = "2048"
+  config.hostmanager.enabled = true
+  config.hostmanager.manage_host = true
+  config.vm.box_check_update = false
+  config.vm.synced_folder ".", "/vagrant", disabled: true
+  config.disksize.size = '40GB'
+
+#install vagrantPlugin: vagrant plugin install vagrant-disksize
+#install vagrantplugin: vagrant plugin install vagrant-hostmanager
+#install vagrantplugin: vagrant plugin install vagrant-vbguest
+
+  config.vm.define "docker01" do |docker01|
+   docker01.vm.box = "ubuntu/focal64"
+   docker01.vm.hostname = "docker01"
+   docker01.vm.network "private_network", ip: "192.168.56.82"
+   docker01.vm.network "public_network"
+   docker01.vm.provider "virtualbox" do |vb|
+     vb.memory = "4096"
+     vb.cpus = 4
    end
-   config.vm.provision "shell", inline: <<-SHELL
+config.vm.provision "shell", inline: <<-SHELL
 #!/bin/bash
 # Add Docker's official GPG key:
 sudo apt-get update
 sudo apt-get install ca-certificates curl -y
-sudo install -m 0755 -d /etc/apt/keyrings -y
+sudo install -m 0755 -d /etc/apt/keyrings
 sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
 sudo chmod a+r /etc/apt/keyrings/docker.asc
 
@@ -23,4 +36,5 @@ sudo apt-get update
 
 sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
    SHELL
+end
 end
