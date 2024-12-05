@@ -12,7 +12,7 @@ pipeline {
         cluster = "ayECS"
         service = "ayecssvc"
         //'registryCredentials'= your region and created Jenkins aws credential on Jenkins webpage
-        //copy and add your created ecr uri abv: 'appRegistry' and 'vprofileRegistry
+        //copy and add your created ecr uri abv: 'appRegistry' and 'aprofileRegistry
         // This is a comment: both values above are same with removal of /* for first and input of 'https' for secnd
     }
   stages {
