@@ -76,3 +76,6 @@ http://192.168.1.16
 
 -run ansible playbook to secure server
 
+![Screenshot (168)](https://github.com/user-attachments/assets/3f95c465-8ef7-4de3-a0b5-376c409bdf3f)
+
+
