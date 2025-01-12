@@ -1,0 +1,96 @@
+---
+- name: Secure server
+  hosts: all
+  become: yes
+  vars:
+    allowed_users: ["admin"]
+    ssh_port: 6470
+  tasks:
+    # 1. Update and upgrade system packages
+    - name: Update and upgrade apt packages
+      apt:
+        name: "*"
+        state: latest
+        update_cache: yes
+        #upgrade: dist
+        cache_valid_time: 3600
+
+    # 2. Install essential security packages
+    - name: Install security tools
+      apt:
+        name:
+          - ufw          # Firewall
+          - unattended-upgrades  # Automatic updates
+        state: present
+
+    # 3. Configure Uncomplicated Firewall (UFW)
+    - name: Set up UFW rules
+      ufw:
+        rule: allow
+        interface: enp0s9
+        direction: in
+        from_port: '22'
+        to_port: "{{ ssh_port }}"
+        proto: tcp
+      notify:
+        - enable ufw
+
+    # 4. Harden SSH configuration
+    - name: Backup current SSH config
+      copy:
+        src: /etc/ssh/sshd_config
+        dest: /etc/ssh/sshd_config.bak
+        remote_src: yes
+
+    - name: Configure SSH settings
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+        state: present
+      loop:
+        - { regexp: "^#?Port", line: "Port {{ ssh_port }}" }
+        - { regexp: "^#?ListenAddress 0.0.0.0", line: "ListenAddress 192.168.1.16"}
+        - { regexp: "^#?PermitRootLogin", line: "PermitRootLogin no" }
+        - { regexp: "^#?PasswordAuthentication", line: "PasswordAuthentication no" }
+        - { regexp: "^#?X11Forwarding", line: "X11Forwarding no" }
+        - { regexp: "^#?MaxAuthTries", line: "MaxAuthTries 3" }
+        - { regexp: "^#?PubkeyAuthentication", line: "PubkeyAuthentication yes" }
+        - { regexp: "^#?AuthorizedKeysFile", line: "AuthorizedKeysFile .ssh/authorized_keys" }
+      notify:
+        - restart ssh
+
+    # 5. Create a non-root user with sudo privileges
+    - name: Create allowed users
+      user:
+        name: "{{ item }}"
+        groups: sudo
+        shell: /bin/bash
+        state: present
+      loop: "{{ allowed_users }}"
+
+    - name: Ensure .ssh directory exists for allowed users
+      file:
+        path: "/home/{{ item }}/.ssh"
+        state: directory
+        owner: "{{ item }}"
+        group: "{{ item }}"
+        mode: '0700'
+      loop: "{{ allowed_users }}"
+
+    # 6. Enable automatic updates
+    - name: Configure unattended-upgrades
+      copy:
+        src: unattended-upgrades.j2
+        dest: /etc/apt/apt.conf.d/50unattended-upgrades
+        mode: '0644'
+
+  handlers:
+    - name: enable ufw
+      ufw:
+        state: enabled
+
+    - name: restart ssh
+      service:
+        name: sshd
+        state: restarted
