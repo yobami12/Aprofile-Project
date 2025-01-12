@@ -14,16 +14,24 @@ cmd: ip link add link enp0s8 name stakingVlan type vlan id 150
 
 
 -Configure firewall
+
 cmd: ufw default deny incoming
+
 cmd: ufw default allow outgoing
+
 cmd: ufw allow in on enp0s9 to any port 22
+
 cmd: ufw allow in on enp0s9 to any port 80
+
 cmd: ufw allow in on enp0s9 to any port 443
+
 cmd: ufw allow in on stakingVlan to any port 9000 from 10.200.16.100/29
+
 cmd: ufw enable
+
 cmd: ufw status
 
-![image](https://github.com/user-attachments/assets/7866bec7-a693-4217-9b89-36455ad5ee91)
+![Screenshot (163)](https://github.com/user-attachments/assets/012179a3-3895-4d85-ae8d-955cd0e9fdb9)
 
 
 -turn on the interface
