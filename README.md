@@ -66,6 +66,13 @@ cmd: ansible all --key-file ~/.ssh/id_rsa -i /etc/ansible/hosts -m ping -u root
 
 -run ansible playbook to deploy artifact 
 
+![Screenshot (166)](https://github.com/user-attachments/assets/5ba1a2d1-6688-4041-b6a7-3ed395a308c0)
 
+-Test deployment on browser
+
+http://192.168.1.16
+
+![Screenshot (167)](https://github.com/user-attachments/assets/9d39d315-238c-4be4-b1ad-434feef8d2f3)
 
 -run ansible playbook to secure server
+
