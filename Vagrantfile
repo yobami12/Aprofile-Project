@@ -19,14 +19,4 @@ Vagrant.configure("2") do |config|
      vb.cpus = 4
    end
   end
-
-  config.vm.define "ansible" do |ansible|
-   ansible.vm.box = "ubuntu/focal64"
-   ansible.vm.hostname = "ansible"
-   ansible.vm.network "private_network", ip: "192.168.56.91"
-   ansible.vm.provider "virtualbox" do |vb|
-     vb.memory = "4096"
-     vb.cpus = 4
-   end
-  end
 end
