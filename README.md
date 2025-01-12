@@ -1,4 +1,6 @@
 -spin up vm with vagrant using virtualbox as the provider with two net intrfces (int&ext)
+![Screenshot (161)](https://github.com/user-attachments/assets/5336e085-05a4-4209-af1f-942ec4ff9dae)
+
 
 			ON WEB01 SERVER
 update server
@@ -6,7 +8,9 @@ cmd: apt-get update
 
 -open port 9000/tcp on web01 and allow connection from 10.200.16.100/29 on vlan interface
 cmd: ip link add link enp0s8 name stakingVlan type vlan id 150
-![Screenshot (159)](https://github.com/user-attachments/assets/29842758-1205-4ba3-8469-6c0c19c6c2e8)
+![Screenshot (162)](https://github.com/user-attachments/assets/57328f3e-0e1b-4d34-acb5-22c93f8a9682)
+
+
 
 cmd: ufw default deny incoming
 cmd: ufw default allow outgoing
