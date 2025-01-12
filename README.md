@@ -6,6 +6,8 @@ cmd: apt-get update
 
 -open port 9000/tcp on web01 and allow connection from 10.200.16.100/29 on vlan interface
 cmd: ip link add link enp0s8 name stakingVlan type vlan id 150
+![Screenshot (159)](https://github.com/user-attachments/assets/29842758-1205-4ba3-8469-6c0c19c6c2e8)
+
 cmd: ufw default deny incoming
 cmd: ufw default allow outgoing
 cmd: ufw allow in on enp0s9 to any port 22
