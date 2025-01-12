@@ -20,7 +20,6 @@
       apt:
         name:
           - ufw          # Firewall
-          - unattended-upgrades  # Automatic updates
         state: present
 
     # 3. Configure Uncomplicated Firewall (UFW)
@@ -77,13 +76,6 @@
         group: "{{ item }}"
         mode: '0700'
       loop: "{{ allowed_users }}"
-
-    # 6. Enable automatic updates
-    - name: Configure unattended-upgrades
-      copy:
-        src: unattended-upgrades.j2
-        dest: /etc/apt/apt.conf.d/50unattended-upgrades
-        mode: '0644'
 
   handlers:
     - name: enable ufw
