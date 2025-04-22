@@ -26,7 +26,7 @@ chown -R tomcat.tomcat /usr/local/tomcat
 
 rm -rf /etc/systemd/system/tomcat.service
 
-cat<<EOF>> /etc/systemd/system/tomcat.service
+cat<<EOF >> /etc/systemd/system/tomcat.service
 [Unit]
 Description=Tomcat
 After=network.target
