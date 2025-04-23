@@ -2,12 +2,11 @@
 sudo yum update -y
 #sudo yum install epel-release -y
 #sudo dnf config-manager --disable epel
-sudo dnf config-manager --disable extras
+sudo dnf config-manager --disable extra*
 sudo dnf clean all
 sudo dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm -y
 sudo dnf install https://rpms.remirepo.net/enterprise/remi-release-9.rpm -y
-sudo crb install
-sudo /usr/bin/crb enable
+sudo crb install || sudo /usr/bin/crb enable
 sudo dnf config-manager --set-enable remi
 sudo dnf update -y
 sudo dnf install memcached -y
