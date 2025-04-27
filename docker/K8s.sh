@@ -5,7 +5,9 @@ sudo systemctl disable ufw
 sudo systemctl stop ufw
 sudo apt-get install -y wget curl
 
+echo " "
 echo "##########INSTALLING KUBEAMD, KUBLET AND KUBECTL###########"
+echo " "
 
 curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
 curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
@@ -23,13 +25,15 @@ sudo apt-get install -y kubectl kubeadm kubelet
 sudo apt-mark hold kubelet kubeadm kubectl
 sudo systemctl enable --now kubelet
 
+echo " "
 echo "##########INSTALLING CONTAINER RUNTIME (CONTAINERD)################"
+echo " "
 
 wget https://github.com/containerd/containerd/releases/download/v2.0.5/containerd-2.0.5-linux-amd64.tar.gz
 tar Cxzvf /usr/local/ containerd-2.0.5-linux-amd64.tar.gz
 mkdir -p /usr/local/lib/systemd/system/
 touch /usr/local/lib/systemd/system/containerd.service
-cat <<. >> /usr/local/lib/systemd/system/containerd.service
+cat <<. > /usr/local/lib/systemd/system/containerd.service
 # Copyright The containerd Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -72,6 +76,7 @@ OOMScoreAdjust=-999
 [Install]
 WantedBy=multi-user.target
 .
+
 systemctl daemon-reload
 systemctl enable --now containerd
 
