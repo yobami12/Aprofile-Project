@@ -108,21 +108,29 @@ echo " "
 sudo swapoff -a
 sed -i '/ swap / s/^/#/' /etc/fstab
 
-#Execute below if currently configured node will be the master node(control panel)
+###Execute below if currently configured node will be the master node(control panel)
 
-#sudo kubeadm init --pod-network-cidr=192.168.0.0/16
+sudo kubeadm init --pod-network-cidr=192.168.0.0/16
 
 ###The --pod-network-cidr flag specifies the CIDR range for the pod network (adjust based on your network setup).
 
 ###Configure kubectl for the Current User:
 ###Set up Kubernetes admin configuration for the user:
 
-#mkdir -p $HOME/.kube
-#sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-#sudo chown $(id -u):$(id -g) $HOME/.kube/config
-#sed -i 's/cgroupDriver.*/cgroupDriver: systemd/g' /var/lib/kubelet/config.yaml
-#kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+sed -i 's/cgroupDriver.*/cgroupDriver: systemd/g' /var/lib/kubelet/config.yaml
+kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+mount | grep cgroup
+sed -i 's/GRUB_CMDLINE_LINUX=*/GRUB_CMDLINE_LINUX="... other options ... systemd.unified_cgroup_hierarchy=1"/g /etc/default/grub
+sudo update-grub
+
+sudo mkdir /sys/fs/cgroup/hugetlb
+sudo mount -t cgroup -o hugetlb none /sys/fs/cgroup/hugetlb
+echo "cgroup /sys/fs/cgroup/hugetlb cgroup hugetlb 0 0" >> /etc/fstab
+reboot
 
 ###Verify the Cluster Status:
 
-#kubectl get nodes
+kubectl get nodes
