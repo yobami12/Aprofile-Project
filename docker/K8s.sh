@@ -123,7 +123,7 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 sed -i 's/cgroupDriver.*/cgroupDriver: systemd/g' /var/lib/kubelet/config.yaml
 kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 mount | grep cgroup
-sed -i 's/GRUB_CMDLINE_LINUX=*/GRUB_CMDLINE_LINUX="... other options ... systemd.unified_cgroup_hierarchy=1"/g /etc/default/grub
+sed -i 's/GRUB_CMDLINE_LINUX=*/GRUB_CMDLINE_LINUX="... other options ... systemd.unified_cgroup_hierarchy=1"/g' /etc/default/grub
 sudo update-grub
 
 sudo mkdir /sys/fs/cgroup/hugetlb
