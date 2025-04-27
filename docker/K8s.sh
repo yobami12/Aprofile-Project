@@ -33,7 +33,7 @@ wget https://github.com/containerd/containerd/releases/download/v2.0.5/container
 tar Cxzvf /usr/local/ containerd-2.0.5-linux-amd64.tar.gz
 mkdir -p /usr/local/lib/systemd/system/
 touch /usr/local/lib/systemd/system/containerd.service
-cat <<. > /usr/local/lib/systemd/system/containerd.service
+cat <<. >> /usr/local/lib/systemd/system/containerd.service
 # Copyright The containerd Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -80,11 +80,17 @@ WantedBy=multi-user.target
 systemctl daemon-reload
 systemctl enable --now containerd
 
+echo " "
 echo "############INSTALLING RUNC####################"
+echo " "
+
 wget https://github.com/opencontainers/runc/releases/download/v1.2.6/runc.amd64
 install -m 755 runc.amd64 /usr/local/sbin/runc
 
+echo " "
 echo "############INSTALLING CNI PLUGINS##################"
+echo " "
+
 wget https://github.com/containernetworking/plugins/releases/download/v1.7.1/cni-plugins-linux-amd64-v1.7.1.tgz
 mkdir -p /opt/cni/bin
 tar Cxzvf /opt/cni/bin cni-plugins-linux-amd64-v1.7.1.tgz
@@ -95,7 +101,10 @@ containerd config default > /etc/containerd/config.toml
 sed -i s/"ShimCgroup = ''"/"ShimCgroup = ''\n            SystemdCgroup = true"/g /etc/containerd/config.toml
 sudo systemctl restart containerd
 
+echo " "
 echo "#############DISABLE SWAP##################"
+echo " "
+
 sudo swapoff -a
 sed -i '/ swap / s/^/#/' /etc/fstab
 
