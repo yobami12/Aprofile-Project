@@ -131,8 +131,8 @@ sudo update-grub
 sudo mkdir /sys/fs/cgroup/hugetlb
 sudo mount -t cgroup -o hugetlb none /sys/fs/cgroup/hugetlb
 echo "cgroup /sys/fs/cgroup/hugetlb cgroup hugetlb 0 0" >> /etc/fstab
-reboot
+#reboot
 
 ###Verify the Cluster Status:
 
-kubectl get nodes
+#kubectl get nodes
