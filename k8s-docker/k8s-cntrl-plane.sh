@@ -1,5 +1,30 @@
 #!/bin/bash
+echo " "
+echo "*********************************************"
+echo "*********INSTALL DOCKER ENGINE***************"
+echo "*********************************************"
+echo " "
+# Add Docker's official GPG key:
+sudo apt-get update
+sudo apt-get install ca-certificates curl -y
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
 
+# Add the repository to Apt sources:
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+
+echo " "
+echo "*********************************************"
+echo "*********DEPLOY K8S CLUSTER***************"
+echo "*********************************************"
+echo " "
 sudo apt-get update && sudo apt-get upgrade -y
 sudo systemctl disable ufw
 sudo systemctl stop ufw
@@ -108,6 +133,11 @@ echo " "
 sudo swapoff -a
 sed -i '/ swap / s/^/#/' /etc/fstab
 
+echo " "
+echo "*******************************************************"
+echo "*********INITIALIZE KUBEADM WITH HOST IP***************"
+echo "*******************************************************"
+echo " "
 ###Execute below if currently configured node will be the master node(control panel)
 
 #sudo kubeadm init --pod-network-cidr=192.168.0.0/16
@@ -124,6 +154,11 @@ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 sed -i 's/cgroupDriver.*/cgroupDriver: systemd/g' /var/lib/kubelet/config.yaml
 kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+echo " "
+echo "*******************************************"
+echo "*********SWITCH TO CGROUP V2***************"
+echo "*******************************************"
+echo " "
 mount | grep cgroup
 sed -i 's/GRUB_CMDLINE_LINUX=*/GRUB_CMDLINE_LINUX="... other options ... systemd.unified_cgroup_hierarchy=1"/g' /etc/default/grub
 sudo update-grub
@@ -131,6 +166,11 @@ sudo update-grub
 sudo mkdir /sys/fs/cgroup/hugetlb
 sudo mount -t cgroup -o hugetlb none /sys/fs/cgroup/hugetlb
 echo "cgroup /sys/fs/cgroup/hugetlb cgroup hugetlb 0 0" >> /etc/fstab
+echo " "
+echo "*********************************************"
+echo "*********DONE (REBOOT REQUIRED)***************"
+echo "*********************************************"
+echo " "
 #reboot
 
 ###Verify the Cluster Status:
