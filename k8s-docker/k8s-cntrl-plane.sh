@@ -155,8 +155,8 @@ echo " "
 ###Execute below if currently configured node will be the master node(control panel)
 
 #sudo kubeadm init --pod-network-cidr=192.168.0.0/16
-#sudo kubeadm init --apiserver-advertise-address=192.168.56.82 --pod-network-cidr=10.244.0.0/16 --apiserver-cert-extra-sans=192.168.56.82
-sudo kubeadm init --apiserver-advertise-address=192.168.56.82 --pod-network-cidr=192.168.56.0/16 --apiserver-cert-extra-sans=192.168.56.82
+sudo kubeadm init --apiserver-advertise-address=192.168.56.82 --pod-network-cidr=10.244.0.0/16 --apiserver-cert-extra-sans=192.168.56.82
+
 
 
 ###The --pod-network-cidr flag specifies the CIDR range for the pod network (adjust based on your network setup).
@@ -169,6 +169,13 @@ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 sed -i 's/cgroupDriver.*/cgroupDriver: systemd/g' /var/lib/kubelet/config.yaml
 kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+echo " "
+echo "*****************************************************"
+echo "*********INSTALLING INGRESS CONTROLLER***************"
+echo "*****************************************************"
+echo " "
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.12.1/deploy/static/provider/cloud/deploy.yaml
+
 echo " "
 echo "*******************************************"
 echo "*********SWITCH TO CGROUP V2***************"
