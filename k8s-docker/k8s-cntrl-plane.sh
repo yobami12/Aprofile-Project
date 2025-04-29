@@ -134,6 +134,20 @@ sudo swapoff -a
 sed -i '/ swap / s/^/#/' /etc/fstab
 
 echo " "
+echo "#############SET br_netfilter##################"
+echo " "
+sudo modprobe br_netfilter
+cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
+br_netfilter
+EOF
+cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+net.ipv4.ip_forward = 1
+EOF
+sudo sysctl --system
+
+echo " "
 echo "*******************************************************"
 echo "*********INITIALIZE KUBEADM WITH HOST IP***************"
 echo "*******************************************************"
