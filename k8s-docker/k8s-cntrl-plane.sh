@@ -179,8 +179,16 @@ sudo apt-get install apt-transport-https --yes
 echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
 sudo apt-get update
 sudo apt-get install helm
-helm upgrade --install ingress-nginx ingress-nginx   --repo https://kubernetes.github.io/ingress-nginx   --namespace ingress-nginx --create-namespace
+
+###The below command is used to create metalLB for ingress but that is after adding the worker node to the cluster also.
+#helm repo add metallb https://metallb.github.io/metallb
+#helm install metallb metallb/metallb
+
+###The below command is used to create ingress but that is after adding the worker node to the cluster
+#helm upgrade --install ingress-nginx ingress-nginx   --repo https://kubernetes.github.io/ingress-nginx   --namespace ingress-nginx --create-namespace
 #kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.12.1/deploy/static/provider/cloud/deploy.yaml
+
+###Note: if metalLB is not installed, ingress will not get 'external-IP'
 
 echo " "
 echo "*******************************************"
