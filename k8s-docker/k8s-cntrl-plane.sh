@@ -183,9 +183,17 @@ sudo apt-get install helm
 ###The below command is used to create metalLB for ingress but that is after adding the worker node to the cluster also.
 #helm repo add metallb https://metallb.github.io/metallb
 #helm install metallb metallb/metallb
+#kubectl get ns default -o yaml > metallb.yaml     (ns will be the ns metallb is installed. in this case, it is default ns)
+###Add the below "pod-security*" to the labels of the ns(default) in the file generated with abv cmd and apply.
+    #pod-security.kubernetes.io/enforce: privileged
+    #pod-security.kubernetes.io/audit: privileged
+    #pod-security.kubernetes.io/warn: privileged
 
-###The below command is used to create ingress but that is after adding the worker node to the cluster
+#kubectl apply -f metallb.yaml -n default
+
+###The below command is used to create ingress but that is after adding the worker node and metalLB to the cluster
 #helm upgrade --install ingress-nginx ingress-nginx   --repo https://kubernetes.github.io/ingress-nginx   --namespace ingress-nginx --create-namespace
+                                      OR
 #kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.12.1/deploy/static/provider/cloud/deploy.yaml
 
 ###Note: if metalLB is not installed, ingress will not get 'external-IP'
