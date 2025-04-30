@@ -193,7 +193,7 @@ sudo apt-get install helm
 
 ###The below command is used to create ingress but that is after adding the worker node and metalLB to the cluster
 #helm upgrade --install ingress-nginx ingress-nginx   --repo https://kubernetes.github.io/ingress-nginx   --namespace ingress-nginx --create-namespace
-                                      OR
+#                                      OR
 #kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.12.1/deploy/static/provider/cloud/deploy.yaml
 
 ###Note: if metalLB is not installed, ingress will not get 'external-IP'
