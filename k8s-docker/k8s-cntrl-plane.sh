@@ -116,9 +116,68 @@ echo " "
 echo "############INSTALLING CNI PLUGINS##################"
 echo " "
 
-wget https://github.com/containernetworking/plugins/releases/download/v1.7.1/cni-plugins-linux-amd64-v1.7.1.tgz
-mkdir -p /opt/cni/bin
-tar Cxzvf /opt/cni/bin cni-plugins-linux-amd64-v1.7.1.tgz
+apt install golang-go
+set -eu -o pipefail
+
+CNI_COMMIT=${1:-$(go list -f "{{.Version}}" -m github.com/containernetworking/plugins)}
+CNI_DIR=${DESTDIR:=''}/opt/cni
+CNI_CONFIG_DIR=${DESTDIR}/etc/cni/net.d
+: "${CNI_REPO:=https://github.com/containernetworking/plugins.git}"
+
+SUDO=''
+if (( $EUID != 0 )); then
+    SUDO='sudo'
+fi
+
+TMPROOT=$(mktemp -d)
+git clone "${CNI_REPO}" "${TMPROOT}"/plugins
+pushd "${TMPROOT}"/plugins
+git checkout "$CNI_COMMIT"
+./build_linux.sh
+$SUDO mkdir -p $CNI_DIR
+$SUDO cp -r ./bin $CNI_DIR
+$SUDO mkdir -p $CNI_CONFIG_DIR
+$SUDO cat << EOF | $SUDO tee $CNI_CONFIG_DIR/10-containerd-net.conflist
+{
+  "cniVersion": "1.0.0",
+  "name": "containerd-net",
+  "plugins": [
+    {
+      "type": "bridge",
+      "bridge": "cni0",
+      "isGateway": true,
+      "ipMasq": true,
+      "promiscMode": true,
+      "ipam": {
+        "type": "host-local",
+        "ranges": [
+          [{
+            "subnet": "10.88.0.0/16"
+          }],
+          [{
+            "subnet": "2001:4860:4860::/64"
+          }]
+        ],
+        "routes": [
+          { "dst": "0.0.0.0/0" },
+          { "dst": "::/0" }
+        ]
+      }
+    },
+    {
+      "type": "portmap",
+      "capabilities": {"portMappings": true}
+    }
+  ]
+}
+EOF
+
+popd
+rm -fR "${TMPROOT}"
+
+#wget https://github.com/containernetworking/plugins/releases/download/v1.7.1/cni-plugins-linux-amd64-v1.7.1.tgz
+#mkdir -p /opt/cni/bin
+#tar Cxzvf /opt/cni/bin cni-plugins-linux-amd64-v1.7.1.tgz
 
 ls -l /run/containerd/containerd.sock
 
