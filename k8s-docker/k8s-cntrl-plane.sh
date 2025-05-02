@@ -118,7 +118,7 @@ echo " "
 echo "############INSTALLING CNI PLUGINS##################"
 echo " "
 
-apt install golang-go
+apt-get install golang-go -y
 set -eu -o pipefail
 
 CNI_COMMIT=${1:-$(go list -f "{{.Version}}" -m github.com/containernetworking/plugins)}
