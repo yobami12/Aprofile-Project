@@ -34,16 +34,18 @@ echo " "
 echo "##########INSTALLING KUBEAMD, KUBLET AND KUBECTL###########"
 echo " "
 
-curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
+#curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+#curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
+curl -LO https://dl.k8s.io/release/v1.32.0/bin/linux/amd64/kubectl
+curl -LO https://dl.k8s.io/release/v1.32.0/bin/linux/amd64/kubectl.sha256
 echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
 sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 kubectl version --client
 sudo apt-get update
 sudo apt-get install -y apt-transport-https ca-certificates curl gnupg
-curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.33/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.32/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
 sudo chmod 644 /etc/apt/keyrings/kubernetes-apt-keyring.gpg
-echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.33/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
+echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.32/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
 sudo chmod 644 /etc/apt/sources.list.d/kubernetes.list
 sudo apt-get update
 sudo apt-get install -y kubectl kubeadm kubelet
@@ -116,9 +118,68 @@ echo " "
 echo "############INSTALLING CNI PLUGINS##################"
 echo " "
 
-wget https://github.com/containernetworking/plugins/releases/download/v1.7.1/cni-plugins-linux-amd64-v1.7.1.tgz
-mkdir -p /opt/cni/bin
-tar Cxzvf /opt/cni/bin cni-plugins-linux-amd64-v1.7.1.tgz
+apt install golang-go
+set -eu -o pipefail
+
+CNI_COMMIT=${1:-$(go list -f "{{.Version}}" -m github.com/containernetworking/plugins)}
+CNI_DIR=${DESTDIR:=''}/opt/cni
+CNI_CONFIG_DIR=${DESTDIR}/etc/cni/net.d
+: "${CNI_REPO:=https://github.com/containernetworking/plugins.git}"
+
+SUDO=''
+if (( $EUID != 0 )); then
+    SUDO='sudo'
+fi
+
+TMPROOT=$(mktemp -d)
+git clone "${CNI_REPO}" "${TMPROOT}"/plugins
+pushd "${TMPROOT}"/plugins
+git checkout "$CNI_COMMIT"
+./build_linux.sh
+$SUDO mkdir -p $CNI_DIR
+$SUDO cp -r ./bin $CNI_DIR
+$SUDO mkdir -p $CNI_CONFIG_DIR
+$SUDO cat << EOF | $SUDO tee $CNI_CONFIG_DIR/10-containerd-net.conflist
+{
+  "cniVersion": "1.0.0",
+  "name": "containerd-net",
+  "plugins": [
+    {
+      "type": "bridge",
+      "bridge": "cni0",
+      "isGateway": true,
+      "ipMasq": true,
+      "promiscMode": true,
+      "ipam": {
+        "type": "host-local",
+        "ranges": [
+          [{
+            "subnet": "10.88.0.0/16"
+          }],
+          [{
+            "subnet": "2001:4860:4860::/64"
+          }]
+        ],
+        "routes": [
+          { "dst": "0.0.0.0/0" },
+          { "dst": "::/0" }
+        ]
+      }
+    },
+    {
+      "type": "portmap",
+      "capabilities": {"portMappings": true}
+    }
+  ]
+}
+EOF
+
+popd
+rm -fR "${TMPROOT}"
+
+#wget https://github.com/containernetworking/plugins/releases/download/v1.7.1/cni-plugins-linux-amd64-v1.7.1.tgz
+#mkdir -p /opt/cni/bin
+#tar Cxzvf /opt/cni/bin cni-plugins-linux-amd64-v1.7.1.tgz
 
 ls -l /run/containerd/containerd.sock
 

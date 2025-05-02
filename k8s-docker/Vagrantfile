@@ -9,31 +9,42 @@ Vagrant.configure("2") do |config|
 #install vagrantplugin: vagrant plugin install vagrant-hostmanager
 #install vagrantplugin: vagrant plugin install vagrant-vbguest
 
-  config.vm.define "docker01" do |docker01|
-   docker01.vm.box = "ubuntu/jammy64"
-   docker01.vm.hostname = "docker01"
-   docker01.vm.network "private_network", ip: "192.168.56.82"
-   docker01.vm.network "public_network"
-   docker01.vm.provider "virtualbox" do |vb|
-     vb.memory = "4096"
-     vb.cpus = 4
+  config.vm.define "master01" do |master01|
+   master01.vm.box = "ubuntu/jammy64"
+   master01.vm.hostname = "master01"
+   master01.vm.network "private_network", ip: "192.168.56.82"
+   master01.vm.network "public_network"
+   master01.vm.provider "virtualbox" do |vb|
+     vb.memory = "2048"
+     vb.cpus = 2
    end
-      config.vm.provision "shell", path: "docker.sh"
-#      config.vm.provision "shell", path: "K8s.sh"
-#config.vm.provision "shell", inline: <<-SHELL
-#!/bin/bash
-   #SHELL
+      master01.vm.provision "shell", path: "k8s-cntrl-plane.sh"
+      #master01.vm.provision "shell", inline: <<-SHELL
+      #!/bin/bash
+      #SHELL
    end
 
-  config.vm.define "docker02" do |docker02|
-   docker02.vm.box = "ubuntu/focal64"
-   docker02.vm.hostname = "docker02"
-   docker02.vm.network "private_network", ip: "192.168.56.84"
-   docker02.vm.network "public_network"
-   docker02.vm.provider "virtualbox" do |vb|
+  config.vm.define "worker00" do |worker00|
+   worker00.vm.box = "ubuntu/focal64"
+   worker00.vm.hostname = "worker00"
+   worker00.vm.network "private_network", ip: "192.168.56.84"
+   worker00.vm.network "public_network"
+   worker00.vm.provider "virtualbox" do |vb|
      vb.memory = "4096"
      vb.cpus = 4
    end
-   config.vm.provision "shell", path: "docker.sh"
+   worker00.vm.provision "shell", path: "k8s-worker.sh"
    end
+  
+  #config.vm.define "worker01" do |worker01|
+   #worker01.vm.box = "ubuntu/focal64"
+   #worker01.vm.hostname = "worker01"
+   #worker01.vm.network "private_network", ip: "192.168.56.85"
+   #worker01.vm.network "public_network"
+   #worker01.vm.provider "virtualbox" do |vb|
+     #vb.memory = "2048"
+     #vb.cpus = 2
+   #end
+   #worker01.vm.provision "shell", path: "k8s-worker.sh"
+   #end
 end
