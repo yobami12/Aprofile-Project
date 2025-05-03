@@ -139,13 +139,22 @@ echo " "
 ###Execute below if currently configured node will be the master node(control panel)
 
 kubeadm config images pull
+<<<<<<< HEAD
 
 #sudo kubeadm init --pod-network-cidr=192.168.0.0/16
 #sudo kubeadm init --apiserver-advertise-address=192.168.56.82 --pod-network-cidr=10.244.0.0/16 --apiserver-cert-extra-sans=192.168.56.82
 
 ###calico
 sudo kubeadm init --apiserver-advertise-address=192.168.56.82 --apiserver-cert-extra-sans=192.168.56.82
+=======
+>>>>>>> 022b6084b9e2f4d4ca0ac3b7566e483240f424e0
 
+#sudo kubeadm init --pod-network-cidr=192.168.0.0/16
+###for flannel
+#sudo kubeadm init --apiserver-advertise-address=192.168.56.82 --pod-network-cidr=10.244.0.0/16 --apiserver-cert-extra-sans=192.168.56.82
+
+###for calico
+sudo kubeadm init --apiserver-advertise-address=192.168.56.82 --apiserver-cert-extra-sans=192.168.56.82
 
 
 ###The --pod-network-cidr flag specifies the CIDR range for the pod network (adjust based on your network setup).
@@ -157,10 +166,19 @@ mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 sed -i 's/cgroupDriver.*/cgroupDriver: systemd/g' /var/lib/kubelet/config.yaml
+<<<<<<< HEAD
 kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 #kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
 kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.27.0/manifests/calico.yaml
 
+=======
+
+#kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+#kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
+kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.27.0/manifests/calico.yaml
+
+
+>>>>>>> 022b6084b9e2f4d4ca0ac3b7566e483240f424e0
 echo " "
 echo "*****************************************************"
 echo "*********INSTALLING INGRESS CONTROLLER***************"
