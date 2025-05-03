@@ -111,8 +111,8 @@ echo " "
 echo "############INSTALLING RUNC####################"
 echo " "
 
-#wget https://github.com/opencontainers/runc/releases/download/v1.2.6/runc.amd64
-#install -m 755 runc.amd64 /usr/local/sbin/runc
+wget https://github.com/opencontainers/runc/releases/download/v1.2.6/runc.amd64
+install -m 755 runc.amd64 /usr/local/sbin/runc
 
 echo " "
 echo "############INSTALLING CNI PLUGINS##################"
