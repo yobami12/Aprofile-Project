@@ -181,9 +181,6 @@ rm -fR "${TMPROOT}"
 #mkdir -p /opt/cni/bin
 #tar Cxzvf /opt/cni/bin cni-plugins-linux-amd64-v1.7.1.tgz
 
-#kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml (flannel)
-#kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml (calico)
-
 ls -l /run/containerd/containerd.sock
 
 containerd config default > /etc/containerd/config.toml
@@ -232,6 +229,9 @@ mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 sed -i 's/cgroupDriver.*/cgroupDriver: systemd/g' /var/lib/kubelet/config.yaml
+
+#kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml (flannel)
+#kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml (calico)
 
 echo " "
 echo "*****************************************************"
