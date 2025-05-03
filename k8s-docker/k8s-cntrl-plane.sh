@@ -1,24 +1,4 @@
 #!/bin/bash
-echo " "
-echo "*********************************************"
-echo "*********INSTALL DOCKER ENGINE***************"
-echo "*********************************************"
-echo " "
-# Add Docker's official GPG key:
-sudo apt-get update
-sudo apt-get install ca-certificates curl -y
-sudo install -m 0755 -d /etc/apt/keyrings
-sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
-sudo chmod a+r /etc/apt/keyrings/docker.asc
-
-# Add the repository to Apt sources:
-echo \
-  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
-  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
-  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-sudo apt-get update
-
-sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
 
 echo " "
 echo "*********************************************"
@@ -118,65 +98,6 @@ echo " "
 echo "############INSTALLING CNI PLUGINS##################"
 echo " "
 
-apt-get install golang-go -y
-set -eu -o pipefail
-
-CNI_COMMIT=${1:-$(go list -f "{{.Version}}" -m github.com/containernetworking/plugins)}
-CNI_DIR=${DESTDIR:=''}/opt/cni
-CNI_CONFIG_DIR=${DESTDIR}/etc/cni/net.d
-: "${CNI_REPO:=https://github.com/containernetworking/plugins.git}"
-
-SUDO=''
-if (( $EUID != 0 )); then
-    SUDO='sudo'
-fi
-
-TMPROOT=$(mktemp -d)
-git clone "${CNI_REPO}" "${TMPROOT}"/plugins
-pushd "${TMPROOT}"/plugins
-git checkout "$CNI_COMMIT"
-./build_linux.sh
-$SUDO mkdir -p $CNI_DIR
-$SUDO cp -r ./bin $CNI_DIR
-$SUDO mkdir -p $CNI_CONFIG_DIR
-$SUDO cat << EOF | $SUDO tee $CNI_CONFIG_DIR/10-containerd-net.conflist
-{
-  "cniVersion": "1.0.0",
-  "name": "containerd-net",
-  "plugins": [
-    {
-      "type": "bridge",
-      "bridge": "cni0",
-      "isGateway": true,
-      "ipMasq": true,
-      "promiscMode": true,
-      "ipam": {
-        "type": "host-local",
-        "ranges": [
-          [{
-            "subnet": "10.88.0.0/16"
-          }],
-          [{
-            "subnet": "2001:4860:4860::/64"
-          }]
-        ],
-        "routes": [
-          { "dst": "0.0.0.0/0" },
-          { "dst": "::/0" }
-        ]
-      }
-    },
-    {
-      "type": "portmap",
-      "capabilities": {"portMappings": true}
-    }
-  ]
-}
-EOF
-
-popd
-rm -fR "${TMPROOT}"
-
 #wget https://github.com/containernetworking/plugins/releases/download/v1.7.1/cni-plugins-linux-amd64-v1.7.1.tgz
 #mkdir -p /opt/cni/bin
 #tar Cxzvf /opt/cni/bin cni-plugins-linux-amd64-v1.7.1.tgz
@@ -185,7 +106,9 @@ ls -l /run/containerd/containerd.sock
 
 containerd config default > /etc/containerd/config.toml
 sed -i s/"ShimCgroup = ''"/"ShimCgroup = ''\n            SystemdCgroup = true"/g /etc/containerd/config.toml
+sed -i "s/disable_tcp_service = true/disable_tcp_service = true\n    sandbox_image = \'registry.k8s.io\/pause:3.10\'/g" /etc/containerd/config.toml
 sudo systemctl restart containerd
+sudo ctr images ls | grep pause || sudo ctr image pull registry.k8s.io/pause:3.10
 
 echo " "
 echo "#############DISABLE SWAP##################"
@@ -215,8 +138,13 @@ echo "*******************************************************"
 echo " "
 ###Execute below if currently configured node will be the master node(control panel)
 
+kubeadm config images pull
+
 #sudo kubeadm init --pod-network-cidr=192.168.0.0/16
-sudo kubeadm init --apiserver-advertise-address=192.168.56.82 --pod-network-cidr=10.244.0.0/16 --apiserver-cert-extra-sans=192.168.56.82
+#sudo kubeadm init --apiserver-advertise-address=192.168.56.82 --pod-network-cidr=10.244.0.0/16 --apiserver-cert-extra-sans=192.168.56.82
+
+###calico
+sudo kubeadm init --apiserver-advertise-address=192.168.56.82 --apiserver-cert-extra-sans=192.168.56.82
 
 
 
@@ -230,6 +158,9 @@ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 sed -i 's/cgroupDriver.*/cgroupDriver: systemd/g' /var/lib/kubelet/config.yaml
 kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+#kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
+kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.27.0/manifests/calico.yaml
+
 echo " "
 echo "*****************************************************"
 echo "*********INSTALLING INGRESS CONTROLLER***************"
@@ -255,8 +186,10 @@ sudo apt-get install helm
 ###The below command is used to create ingress but that is after adding the worker node and metalLB to the cluster
 #helm upgrade --install ingress-nginx ingress-nginx   --repo https://kubernetes.github.io/ingress-nginx   --namespace ingress-nginx --create-namespace
 #                                      OR
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.12.1/deploy/static/provider/cloud/deploy.yaml
+#kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.12.1/deploy/static/provider/cloud/deploy.yaml
 #kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml  (new)
+
+#kubectl delete -A ValidatingWebhookConfiguration ingress-nginx-admission (if creating ingress is showing webhook error)
 
 ###Note: if metalLB is not installed, ingress will not get 'external-IP'
 

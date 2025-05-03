@@ -1,24 +1,4 @@
 #!/bin/bash
-echo " "
-echo "*********************************************"
-echo "*********INSTALL DOCKER ENGINE***************"
-echo "*********************************************"
-echo " "
-# Add Docker's official GPG key:
-sudo apt-get update
-sudo apt-get install ca-certificates curl -y
-sudo install -m 0755 -d /etc/apt/keyrings
-sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
-sudo chmod a+r /etc/apt/keyrings/docker.asc
-
-# Add the repository to Apt sources:
-echo \
-  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
-  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
-  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-sudo apt-get update
-
-sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
 
 echo " "
 echo "*********************************************"
@@ -118,68 +98,68 @@ echo " "
 echo "############INSTALLING CNI PLUGINS##################"
 echo " "
 
-apt install golang-go
-set -eu -o pipefail
+#apt install golang-go -y
+#set -eu -o pipefail
 
-CNI_COMMIT=${1:-$(go list -f "{{.Version}}" -m github.com/containernetworking/plugins)}
-CNI_DIR=${DESTDIR:=''}/opt/cni
-CNI_CONFIG_DIR=${DESTDIR}/etc/cni/net.d
-: "${CNI_REPO:=https://github.com/containernetworking/plugins.git}"
+#CNI_COMMIT=${1:-$(go list -f "{{.Version}}" -m github.com/containernetworking/plugins)}
+#CNI_DIR=${DESTDIR:=''}/opt/cni
+#CNI_CONFIG_DIR=${DESTDIR}/etc/cni/net.d
+#: "${CNI_REPO:=https://github.com/containernetworking/plugins.git}"
 
-SUDO=''
-if (( $EUID != 0 )); then
-    SUDO='sudo'
-fi
+#SUDO=''
+#if (( $EUID != 0 )); then
+#    SUDO='sudo'
+#fi
 
-TMPROOT=$(mktemp -d)
-git clone "${CNI_REPO}" "${TMPROOT}"/plugins
-pushd "${TMPROOT}"/plugins
-git checkout "$CNI_COMMIT"
-./build_linux.sh
-$SUDO mkdir -p $CNI_DIR
-$SUDO cp -r ./bin $CNI_DIR
-$SUDO mkdir -p $CNI_CONFIG_DIR
-$SUDO cat << EOF | $SUDO tee $CNI_CONFIG_DIR/10-containerd-net.conflist
-{
-  "cniVersion": "1.0.0",
-  "name": "containerd-net",
-  "plugins": [
-    {
-      "type": "bridge",
-      "bridge": "cni0",
-      "isGateway": true,
-      "ipMasq": true,
-      "promiscMode": true,
-      "ipam": {
-        "type": "host-local",
-        "ranges": [
-          [{
-            "subnet": "10.88.0.0/16"
-          }],
-          [{
-            "subnet": "2001:4860:4860::/64"
-          }]
-        ],
-        "routes": [
-          { "dst": "0.0.0.0/0" },
-          { "dst": "::/0" }
-        ]
-      }
-    },
-    {
-      "type": "portmap",
-      "capabilities": {"portMappings": true}
-    }
-  ]
-}
-EOF
+#TMPROOT=$(mktemp -d)
+#git clone "${CNI_REPO}" "${TMPROOT}"/plugins
+#pushd "${TMPROOT}"/plugins
+#git checkout "$CNI_COMMIT"
+#./build_linux.sh
+#$SUDO mkdir -p $CNI_DIR
+#$SUDO cp -r ./bin $CNI_DIR
+#$SUDO mkdir -p $CNI_CONFIG_DIR
+#$SUDO cat << EOF | $SUDO tee $CNI_CONFIG_DIR/10-containerd-net.conflist
+#{
+#  "cniVersion": "1.0.0",
+#  "name": "containerd-net",
+#  "plugins": [
+#    {
+#      "type": "bridge",
+#      "bridge": "cni0",
+#      "isGateway": true,
+#      "ipMasq": true,
+#      "promiscMode": true,
+#      "ipam": {
+#        "type": "host-local",
+#        "ranges": [
+#          [{
+#            "subnet": "10.88.0.0/16"
+#          }],
+#          [{
+#            "subnet": "2001:4860:4860::/64"
+#          }]
+#        ],
+#        "routes": [
+#          { "dst": "0.0.0.0/0" },
+#          { "dst": "::/0" }
+#        ]
+#      }
+#    },
+#    {
+#      "type": "portmap",
+#      "capabilities": {"portMappings": true}
+#    }
+#  ]
+#}
+#EOF
 
-popd
-rm -fR "${TMPROOT}"
+#popd
+#rm -fR "${TMPROOT}"
 
-#wget https://github.com/containernetworking/plugins/releases/download/v1.7.1/cni-plugins-linux-amd64-v1.7.1.tgz
-#mkdir -p /opt/cni/bin
-#tar Cxzvf /opt/cni/bin cni-plugins-linux-amd64-v1.7.1.tgz
+wget https://github.com/containernetworking/plugins/releases/download/v1.7.1/cni-plugins-linux-amd64-v1.7.1.tgz
+mkdir -p /opt/cni/bin
+tar Cxzvf /opt/cni/bin cni-plugins-linux-amd64-v1.7.1.tgz
 
 ls -l /run/containerd/containerd.sock
 
