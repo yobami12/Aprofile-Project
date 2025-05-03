@@ -187,6 +187,7 @@ containerd config default > /etc/containerd/config.toml
 sed -i s/"ShimCgroup = ''"/"ShimCgroup = ''\n            SystemdCgroup = true"/g /etc/containerd/config.toml
 sed -i 's/[plugins."io.containerd.grpc.v1.cri"]/[plugins."io.containerd.grpc.v1.cri"]\n    sandbox_image = "registry.k8s.io/pause:3.10"/g /etc/containerd/config.toml
 sudo systemctl restart containerd
+sudo ctr images ls | grep pause || sudo ctr image pull registry.k8s.io/pause:3.10
 
 echo " "
 echo "#############DISABLE SWAP##################"
