@@ -217,9 +217,11 @@ echo "*******************************************************"
 echo " "
 ###Execute below if currently configured node will be the master node(control panel)
 
-#sudo kubeadm init --pod-network-cidr=192.168.0.0/16
-sudo kubeadm init --apiserver-advertise-address=192.168.56.82 --pod-network-cidr=10.244.0.0/16 --apiserver-cert-extra-sans=192.168.56.82
+kubeadm config images pull
 
+#sudo kubeadm init --pod-network-cidr=192.168.0.0/16
+#sudo kubeadm init --apiserver-advertise-address=192.168.56.82 --pod-network-cidr=10.244.0.0/16 --apiserver-cert-extra-sans=192.168.56.82 (flannel)
+sudo kubeadm init --apiserver-advertise-address=192.168.56.82 --apiserver-cert-extra-sans=192.168.56.82 (calico)
 
 
 ###The --pod-network-cidr flag specifies the CIDR range for the pod network (adjust based on your network setup).
