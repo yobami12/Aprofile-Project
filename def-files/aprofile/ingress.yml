@@ -1,0 +1,55 @@
+#apiVersion: networking.k8s.io/v1
+#kind: Ingress
+#metadata:
+#  name: jenkins-ingress
+#spec:
+#  ingressClassName: nginx
+#  rules:
+#    - host: master01
+#      http:
+#        paths:
+#          - path: /
+#            pathType: Prefix
+#            backend:
+#              service:
+#                name: jenkins
+#                port:
+#                  number: 8080
+
+#  apiVersion: v1
+#  kind: Ingress
+#  metadata:
+#    name: jenkins-ingress
+#    namespace: jenkins
+#  spec:
+#    ingressClassName: nginx
+#    rules:
+#      - host: hayodavies.com
+#        http:
+#          paths:
+#            - pathType: Prefix
+#              backend:
+#                service:
+#                  name: jenkins
+#                  port:
+#                    number: 8080
+#              path: /
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: app01-ingress
+  #  namespace: aprofile
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: app01.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: app01
+                port:
+                  number: 8080

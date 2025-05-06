@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app01
+  labels:
+    app: app01
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app01
+  template:
+    metadata:
+      labels:
+        app: app01
+    spec:
+      containers:
+      - name: app01
+        image: ayobamintl/app01:v1.1
+        ports:
+        - name: app-port
+          containerPort: 8080
+      initContainers:
+      - name: init-mydb
+        image: busybox
+        command: ['sh', '-c', 'until nslookup db01.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local; do echo waiting for mydb; sleep 2; done;']
+      - name: init-memcache
+        image: busybox
+        command: ['sh', '-c', 'until nslookup mc01.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local; do echo waiting for mydb; sleep 2; done;']
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app01
+spec:
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: app01
+  type: ClusterIP
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app01-lb
+spec:
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: app01
+  type: LoadBalancer

@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: app01-ingress
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: hayodavies.com
+    http:
+      paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: app01
+              port:
+                number: 8080

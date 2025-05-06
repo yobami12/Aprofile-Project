@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db01
+  labels:
+    app: db01
+spec:
+  selector:
+    matchLabels:
+      app: db01
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: db01
+    spec:
+      containers:
+      - name: db01
+        image: ayobamintl/db01:v1.1
+        ports:
+        - name: db-port
+          containerPort: 3306
+        env:
+         - name: MYSQL_ROOT_PASSWORD
+           valueFrom:
+             secretKeyRef:
+               name: app-secret
+               key: db-pass
+#        env:
+#         - name: MYSQL_USER
+#           value: "root"
+#        env:
+#         - name: MYSQL_PASSWORD
+#           valueFrom:
+#             secretKeyRef:
+#               name: app-secret
+#               key: db-pass
+#        env:
+#         - name: MYSQL_DATABASE
+#           value: accounts
+#        initContainers:
+#        - name: busybox
+#          image: busybox:latest
+#          args: ["rm", "-rf", "/var/lib/mysql/lost+found"]
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: db01
+spec:
+  ports:
+  - port: 3306
+    targetPort: db-port
+    protocol: TCP
+  selector:
+    app: db01
+  type: ClusterIP

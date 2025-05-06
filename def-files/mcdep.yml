@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mc01
+  labels:
+    app: mc01
+spec:
+  selector:
+    matchLabels:
+      app: mc01
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mc01
+    spec:
+      containers:
+      - name: mc01
+        image: memcached
+        ports:
+        - name: mc-port
+          containerPort: 11211
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mc01
+spec:
+  ports:
+  - port: 11211
+    targetPort: mc-port
+    protocol: TCP
+  selector:
+    app: mc01 
+  type: ClusterIP

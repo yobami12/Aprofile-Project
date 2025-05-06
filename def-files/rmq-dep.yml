@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rmq01
+  labels:
+    app: rmq01
+spec:
+  selector:
+    matchLabels:
+      app: rmq01
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: rmq01
+    spec:
+      containers:
+      - name: rmq01
+        image: rabbitmq
+        ports:
+        - name: rmq01-port
+          containerPort: 15672
+        env: 
+         - name: RABBITMQ_DEFAULT_PASS
+           valueFrom:
+             secretKeyRef:
+               name: app-secret
+               key: rmq-pass
+         - name: RABBITMQ_DEFAULT_USER
+           value: "ayobami"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rmq01
+spec:
+  ports:
+  - port: 5672
+    targetPort: rmq01-port
+    protocol: TCP
+  selector:
+    app: rmq01
+  type: ClusterIP
