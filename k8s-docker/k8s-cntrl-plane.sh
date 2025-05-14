@@ -158,6 +158,7 @@ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 sed -i 's/cgroupDriver.*/cgroupDriver: systemd/g' /var/lib/kubelet/config.yaml
 
+###Documentation URL: https://docs.tigera.io/calico/latest/getting-started/kubernetes/self-managed-onprem/onpremises
 curl https://raw.githubusercontent.com/projectcalico/calico/v3.30.0/manifests/calico.yaml -O
 #curl https://raw.githubusercontent.com/projectcalico/calico/v3.27.0/manifests/calico.yaml -O
 
