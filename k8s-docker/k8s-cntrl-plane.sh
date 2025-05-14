@@ -141,13 +141,11 @@ echo " "
 kubeadm config images pull
 
 
+###default cidr for calico=192.168.0.0/16 | flannel=10.244.0.0/16
+
 #sudo kubeadm init --pod-network-cidr=192.168.0.0/16
 
-###flannel
 sudo kubeadm init --apiserver-advertise-address=192.168.56.82 --pod-network-cidr=10.244.0.0/16 --apiserver-cert-extra-sans=192.168.56.82
-
-###calico
-#sudo kubeadm init --apiserver-advertise-address=192.168.56.82 --apiserver-cert-extra-sans=192.168.56.82
 
 ###The --pod-network-cidr flag specifies the CIDR range for the pod network (adjust based on your network setup).
 
@@ -159,10 +157,24 @@ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 sed -i 's/cgroupDriver.*/cgroupDriver: systemd/g' /var/lib/kubelet/config.yaml
 
-kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
-#kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
-#kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.27.0/manifests/calico.yaml
+curl https://raw.githubusercontent.com/projectcalico/calico/v3.30.0/manifests/calico.yaml -O
+#curl https://raw.githubusercontent.com/projectcalico/calico/v3.27.0/manifests/calico.yaml -O
 
+#kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+
+###uncomment "- name: CALICO_IPV4POOL_CIDR" in "calico.yaml" file curled above
+###uncomment "value: "10.244.0.0/16"" also and update with "--pod-network-cidr" used in kubeadm init cmd
+sed -i "s/# - name: CALICO_IPV4POOL_CIDR/- name: CALICO_IPV4POOL_CIDR/g" ~/calico.yaml
+sed -i 's/#   value: "192.168.0.0\/16"/  value: "10.244.0.0\/16"/g' ~/calico.yaml
+kubectl create -f calico.yaml
+
+###install calico binary
+cd /usr/local/bin
+curl -L https://github.com/projectcalico/calico/releases/download/v3.30.0/calicoctl-linux-amd64 -o calicoctl
+chmod +x ./calicoctl
+cd
+#sleep 10
+#calicoctl node status
 
 echo " "
 echo "*****************************************************"
@@ -175,17 +187,6 @@ echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.
 sudo apt-get update
 sudo apt-get install helm
 
-###The below command is used to create metalLB for ingress but that is after adding the worker node to the cluster also.
-#helm repo add metallb https://metallb.github.io/metallb
-#helm install metallb metallb/metallb
-#kubectl get ns default -o yaml > metallb.yaml     (ns will be the ns metallb is installed. in this case, it is default ns)
-###Add the below "pod-security*" to the labels of the ns(default) in the file generated with abv cmd and apply.
-    #pod-security.kubernetes.io/enforce: privileged
-    #pod-security.kubernetes.io/audit: privileged
-    #pod-security.kubernetes.io/warn: privileged
-
-#kubectl apply -f metallb.yaml -n default
-
 ###The below command is used to create ingress but that is after adding the worker node and metalLB to the cluster
 #helm upgrade --install ingress-nginx ingress-nginx   --repo https://kubernetes.github.io/ingress-nginx   --namespace ingress-nginx --create-namespace
 #                                      OR
@@ -193,8 +194,6 @@ sudo apt-get install helm
 #kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml  (new)
 
 #kubectl delete -A ValidatingWebhookConfiguration ingress-nginx-admission (if creating ingress is showing webhook error)
-
-###Note: if metalLB is not installed, ingress will not get 'external-IP'
 
 echo " "
 echo "*******************************************"
