@@ -161,7 +161,8 @@ sudo sed -i 's/cgroupDriver.*/cgroupDriver: systemd/g' /var/lib/kubelet/config.y
 sudo sleep 20
 
 ###Documentation URL: https://docs.tigera.io/calico/latest/getting-started/kubernetes/self-managed-onprem/onpremises
-sudo curl https://raw.githubusercontent.com/projectcalico/calico/v3.30.0/manifests/calico.yaml -O
+sudo curl https://raw.githubusercontent.com/projectcalico/calico/v3.30.0/manifests/calico.yaml > $HOME/calico.yaml
+#sudo curl https://raw.githubusercontent.com/projectcalico/calico/v3.30.0/manifests/calico.yaml -O
 #sudo curl https://raw.githubusercontent.com/projectcalico/calico/v3.27.0/manifests/calico.yaml -O
 
 #kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
