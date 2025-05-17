@@ -105,8 +105,8 @@ tar Cxzvf /opt/cni/bin cni-plugins-linux-amd64-v1.7.1.tgz
 
 ls -l /run/containerd/containerd.sock
 
-sudo mkdir -p /etc/containerd/
-sudo touch /etc/containerd/config.toml
+mkdir -p /etc/containerd/
+touch /etc/containerd/config.toml
 containerd config default > /etc/containerd/config.toml
 sed -i s/"ShimCgroup = ''"/"ShimCgroup = ''\n            SystemdCgroup = true"/g /etc/containerd/config.toml
 sed -i "s/disable_tcp_service = true/disable_tcp_service = true\n    sandbox_image = \'registry.k8s.io\/pause:3.10\'/g" /etc/containerd/config.toml
