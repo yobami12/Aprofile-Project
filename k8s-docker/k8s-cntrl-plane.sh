@@ -168,8 +168,8 @@ sudo curl https://raw.githubusercontent.com/projectcalico/calico/v3.30.0/manifes
 
 ###uncomment "- name: CALICO_IPV4POOL_CIDR" in "calico.yaml" file curled above
 ###uncomment "value: "10.244.0.0/16"" also and update with "--pod-network-cidr" used in kubeadm init cmd
-sudo sed -i "s/# - name: CALICO_IPV4POOL_CIDR/- name: CALICO_IPV4POOL_CIDR/g" ~/calico.yaml
-sudo sed -i 's/#   value: "192.168.0.0\/16"/  value: "10.244.0.0\/16"/g' ~/calico.yaml
+sudo sed -i "s/# - name: CALICO_IPV4POOL_CIDR/- name: CALICO_IPV4POOL_CIDR/g" $HOME/calico.yaml
+sudo sed -i 's/#   value: "192.168.0.0\/16"/  value: "10.244.0.0\/16"/g' $HOME/calico.yaml
 sudo kubectl create -f calico.yaml
 
 ###install calico binary
@@ -192,10 +192,14 @@ sudo apt-get update
 sudo apt-get install helm
 
 ###The below command is used to create ingress but that is after adding the worker node and metalLB to the cluster
-#helm upgrade --install ingress-nginx ingress-nginx   --repo https://kubernetes.github.io/ingress-nginx   --namespace ingress-nginx --create-namespace (type: LoadBalancer)
+#helm upgrade --install ingress-nginx ingress-nginx   --repo https://kubernetes.github.io/ingress-nginx   --namespace ingress-nginx --create-namespace 
+#(type: LoadBalancer)
 #                                      OR
-sudo kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.12.1/deploy/static/provider/cloud/deploy.yaml (type: LoadBalancer)
-#kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml  (type: NodePort)
+sudo kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.12.1/deploy/static/provider/cloud/deploy.yaml 
+#(type: LoadBalancer)
+
+#kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml  
+#(type: NodePort)
 
 #kubectl delete -A ValidatingWebhookConfiguration ingress-nginx-admission (if creating ingress is showing webhook error)
 
