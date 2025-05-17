@@ -105,9 +105,10 @@ tar Cxzvf /opt/cni/bin cni-plugins-linux-amd64-v1.7.1.tgz
 
 ls -l /run/containerd/containerd.sock
 
+sudo mkdir -p /etc/containerd/config.toml
 containerd config default > /etc/containerd/config.toml
-sed -i s/"ShimCgroup = ''"/"ShimCgroup = ''\n            SystemdCgroup = true"/g /etc/containerd/config.toml
-sed -i "s/disable_tcp_service = true/disable_tcp_service = true\n    sandbox_image = \'registry.k8s.io\/pause:3.10\'/g" /etc/containerd/config.toml
+sudo sed -i s/"ShimCgroup = ''"/"ShimCgroup = ''\n            SystemdCgroup = true"/g /etc/containerd/config.toml
+sudo sed -i "s/disable_tcp_service = true/disable_tcp_service = true\n    sandbox_image = \'registry.k8s.io\/pause:3.10\'/g" /etc/containerd/config.toml
 sudo systemctl restart containerd
 sudo ctr images ls | grep pause || sudo ctr image pull registry.k8s.io/pause:3.10
 
@@ -161,7 +162,7 @@ sudo sed -i 's/cgroupDriver.*/cgroupDriver: systemd/g' /var/lib/kubelet/config.y
 sudo sleep 20
 
 ###Documentation URL: https://docs.tigera.io/calico/latest/getting-started/kubernetes/self-managed-onprem/onpremises
-sudo curl https://raw.githubusercontent.com/projectcalico/calico/v3.30.0/manifests/calico.yaml > $HOME/calico.yaml
+sudo wget https://raw.githubusercontent.com/projectcalico/calico/v3.30.0/manifests/calico.yaml
 #sudo curl https://raw.githubusercontent.com/projectcalico/calico/v3.30.0/manifests/calico.yaml -O
 #sudo curl https://raw.githubusercontent.com/projectcalico/calico/v3.27.0/manifests/calico.yaml -O
 
