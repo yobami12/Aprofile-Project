@@ -163,7 +163,7 @@ sudo sed -i 's/cgroupDriver.*/cgroupDriver: systemd/g' /var/lib/kubelet/config.y
 sudo sleep 20
 
 ###Documentation URL: https://docs.tigera.io/calico/latest/getting-started/kubernetes/self-managed-onprem/onpremises
-sudo wget https://raw.githubusercontent.com/projectcalico/calico/v3.30.0/manifests/calico.yaml
+wget https://raw.githubusercontent.com/projectcalico/calico/v3.30.0/manifests/calico.yaml
 #sudo curl https://raw.githubusercontent.com/projectcalico/calico/v3.30.0/manifests/calico.yaml -O
 #sudo curl https://raw.githubusercontent.com/projectcalico/calico/v3.27.0/manifests/calico.yaml -O
 
@@ -171,8 +171,8 @@ sudo wget https://raw.githubusercontent.com/projectcalico/calico/v3.30.0/manifes
 
 ###uncomment "- name: CALICO_IPV4POOL_CIDR" in "calico.yaml" file curled above
 ###uncomment "value: "10.244.0.0/16"" also and update with "--pod-network-cidr" used in kubeadm init cmd
-sudo sed -i "s/# - name: CALICO_IPV4POOL_CIDR/- name: CALICO_IPV4POOL_CIDR/g" $HOME/calico.yaml
-sudo sed -i 's/#   value: "192.168.0.0\/16"/  value: "10.244.0.0\/16"/g' $HOME/calico.yaml
+sed -i "s/# - name: CALICO_IPV4POOL_CIDR/- name: CALICO_IPV4POOL_CIDR/g" $HOME/calico.yaml
+sed -i 's/#   value: "192.168.0.0\/16"/  value: "10.244.0.0\/16"/g' $HOME/calico.yaml
 sudo kubectl create -f calico.yaml
 
 ###install calico binary
