@@ -139,7 +139,7 @@ echo "*******************************************************"
 echo " "
 ###Execute below if currently configured node will be the master node(control panel)
 
-kubeadm config images pull
+sudo kubeadm config images pull
 
 
 ###default cidr for calico=192.168.0.0/16 | flannel=10.244.0.0/16
@@ -153,27 +153,29 @@ sudo kubeadm init --apiserver-advertise-address=192.168.56.82 --pod-network-cidr
 ###Configure kubectl for the Current User:
 ###Set up Kubernetes admin configuration for the user:
 
-mkdir -p $HOME/.kube
+sudo mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
-sed -i 's/cgroupDriver.*/cgroupDriver: systemd/g' /var/lib/kubelet/config.yaml
+sudo sed -i 's/cgroupDriver.*/cgroupDriver: systemd/g' /var/lib/kubelet/config.yaml
+
+sudo sleep 20
 
 ###Documentation URL: https://docs.tigera.io/calico/latest/getting-started/kubernetes/self-managed-onprem/onpremises
-curl https://raw.githubusercontent.com/projectcalico/calico/v3.30.0/manifests/calico.yaml -O
-#curl https://raw.githubusercontent.com/projectcalico/calico/v3.27.0/manifests/calico.yaml -O
+sudo curl https://raw.githubusercontent.com/projectcalico/calico/v3.30.0/manifests/calico.yaml -O
+#sudo curl https://raw.githubusercontent.com/projectcalico/calico/v3.27.0/manifests/calico.yaml -O
 
 #kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 
 ###uncomment "- name: CALICO_IPV4POOL_CIDR" in "calico.yaml" file curled above
 ###uncomment "value: "10.244.0.0/16"" also and update with "--pod-network-cidr" used in kubeadm init cmd
-sed -i "s/# - name: CALICO_IPV4POOL_CIDR/- name: CALICO_IPV4POOL_CIDR/g" ~/calico.yaml
-sed -i 's/#   value: "192.168.0.0\/16"/  value: "10.244.0.0\/16"/g' ~/calico.yaml
-kubectl create -f calico.yaml
+sudo sed -i "s/# - name: CALICO_IPV4POOL_CIDR/- name: CALICO_IPV4POOL_CIDR/g" ~/calico.yaml
+sudo sed -i 's/#   value: "192.168.0.0\/16"/  value: "10.244.0.0\/16"/g' ~/calico.yaml
+sudo kubectl create -f calico.yaml
 
 ###install calico binary
-cd /usr/local/bin
-curl -L https://github.com/projectcalico/calico/releases/download/v3.30.0/calicoctl-linux-amd64 -o calicoctl
-chmod +x ./calicoctl
+sudo cd /usr/local/bin
+sudo curl -L https://github.com/projectcalico/calico/releases/download/v3.30.0/calicoctl-linux-amd64 -o calicoctl
+sudo chmod +x ./calicoctl
 cd
 #sleep 10
 #calicoctl node status
@@ -183,7 +185,7 @@ echo "*****************************************************"
 echo "*********INSTALLING INGRESS CONTROLLER***************"
 echo "*****************************************************"
 echo " "
-curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
+sudo curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
 sudo apt-get install apt-transport-https --yes
 echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
 sudo apt-get update
@@ -192,7 +194,7 @@ sudo apt-get install helm
 ###The below command is used to create ingress but that is after adding the worker node and metalLB to the cluster
 #helm upgrade --install ingress-nginx ingress-nginx   --repo https://kubernetes.github.io/ingress-nginx   --namespace ingress-nginx --create-namespace (type: LoadBalancer)
 #                                      OR
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.12.1/deploy/static/provider/cloud/deploy.yaml (type: LoadBalancer)
+sudo kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.12.1/deploy/static/provider/cloud/deploy.yaml (type: LoadBalancer)
 #kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml  (type: NodePort)
 
 #kubectl delete -A ValidatingWebhookConfiguration ingress-nginx-admission (if creating ingress is showing webhook error)
