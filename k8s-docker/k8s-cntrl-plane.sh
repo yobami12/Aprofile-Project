@@ -174,12 +174,9 @@ sudo sed -i 's/#   value: "192.168.0.0\/16"/  value: "10.244.0.0\/16"/g' $HOME/c
 sudo kubectl create -f calico.yaml
 
 ###install calico binary
-sudo cd /usr/local/bin
-sudo curl -L https://github.com/projectcalico/calico/releases/download/v3.30.0/calicoctl-linux-amd64 -o calicoctl
-sudo chmod +x ./calicoctl
-cd
-#sleep 10
-#calicoctl node status
+#sudo cd /usr/local/bin
+sudo curl -L https://github.com/projectcalico/calico/releases/download/v3.30.0/calicoctl-linux-amd64 > /usr/local/bin/calicoctl
+sudo chmod +x /usr/local/bin/calicoctl
 
 echo " "
 echo "*****************************************************"
