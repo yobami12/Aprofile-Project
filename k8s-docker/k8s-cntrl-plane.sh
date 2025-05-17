@@ -160,7 +160,7 @@ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 sudo sed -i 's/cgroupDriver.*/cgroupDriver: systemd/g' /var/lib/kubelet/config.yaml
 
-sudo sleep 20
+sudo sleep 60
 
 ###Documentation URL: https://docs.tigera.io/calico/latest/getting-started/kubernetes/self-managed-onprem/onpremises
 wget https://raw.githubusercontent.com/projectcalico/calico/v3.30.0/manifests/calico.yaml
@@ -179,6 +179,7 @@ sudo kubectl create -f calico.yaml
 #sudo cd /usr/local/bin
 sudo curl -L https://github.com/projectcalico/calico/releases/download/v3.30.0/calicoctl-linux-amd64 > /usr/local/bin/calicoctl
 sudo chmod +x /usr/local/bin/calicoctl
+sudo sleep 60
 
 echo " "
 echo "*****************************************************"
