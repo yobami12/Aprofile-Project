@@ -12,8 +12,6 @@ Install
   
   -Vagrant
 
-  ![Screenshot (181)](https://github.com/user-attachments/assets/6881a6dd-4f87-4007-b0b1-f9e4337ff633)
-
   
 NOTE: host pc should also have more than 120GB free disk space and 16GB ram
 
@@ -33,6 +31,7 @@ vagrant plugin install vagrant-hostmanager
 
 vagrant up
 
+![Screenshot (181)](https://github.com/user-attachments/assets/74eb39a6-c88a-48b8-9939-f7438d1b68b7)
 
 
 ###reboot all vms
