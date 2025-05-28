@@ -11,6 +11,9 @@ Install
   -Virtualbox
   
   -Vagrant
+
+  ![Screenshot (181)](https://github.com/user-attachments/assets/6881a6dd-4f87-4007-b0b1-f9e4337ff633)
+
   
 NOTE: host pc should also have more than 120GB free disk space and 16GB ram
 
