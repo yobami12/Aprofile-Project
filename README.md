@@ -96,7 +96,8 @@ Note: “:31933” is the auto assigned port to the “app01-lb” in this clust
 
 ![Screenshot (187)](https://github.com/user-attachments/assets/2bb93ebf-4e31-43d3-a278-9afeccd7015e)
 
-Username and password
+Username and password:
+
 	admin_vp
 
 Step 4:
