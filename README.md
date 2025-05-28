@@ -21,15 +21,15 @@ Step 1:
 
 ###On gitbash clone repo: 
 
-git clone -b main https://github.com/yobami12/Aprofile-Project.git
+	git clone -b main https://github.com/yobami12/Aprofile-Project.git
 
-cd Aprofile-Project/k8s-docker
+	cd Aprofile-Project/k8s-docker
 
-vagrant plugin install vagrant-disksize
+	vagrant plugin install vagrant-disksize
 
-vagrant plugin install vagrant-hostmanager
+	vagrant plugin install vagrant-hostmanager
 
-vagrant up
+	vagrant up
 
 ![Screenshot (181)](https://github.com/user-attachments/assets/74eb39a6-c88a-48b8-9939-f7438d1b68b7)
 
@@ -42,13 +42,13 @@ Step 2:
 
 ###login to master node vm(master01) and run:
 
- kubeadm token create --print-join-command
+ 	kubeadm token create --print-join-command
 
 ###copy the output of the ‘kubeadm token …’ command above; login and paste it to each worker node to add them to the cluster.
 
  ###verify on the master node that the worker nodes have been added.
 	
- Kubectl get nodes
+ 	Kubectl get nodes
 
 ![Screenshot (182)](https://github.com/user-attachments/assets/17c6b3a3-1f54-4f33-862b-21404fbf192c)
 
@@ -59,13 +59,13 @@ Step 3:
 
 ###on master node vm run:
 
- git clone -b main https://github.com/yobami12/Aprofile-Project.git
+ 	git clone -b main https://github.com/yobami12/Aprofile-Project.git
 
- cd Aprofile-Project/def-files
+ 	cd Aprofile-Project/def-files
 
- kubectl create -f .
+ 	kubectl create -f .
 
- Kubectl get all -n default
+ 	Kubectl get all -n default
 
 ![Screenshot (185)](https://github.com/user-attachments/assets/07755bc2-dec1-4256-82fe-eb57ef761920)
 
@@ -78,8 +78,8 @@ Note: “:31933” is the auto assigned port to the “app01-lb” in this clust
 
 ![Screenshot (187)](https://github.com/user-attachments/assets/2bb93ebf-4e31-43d3-a278-9afeccd7015e)
 
-	Username: admin_vp
-	Password: admin_vp
+Username and password
+	admin_vp
 
 Step 4:
 
@@ -96,21 +96,21 @@ PROMETHEUS
 
 ###add prometheus and grafana repo using helm cmd:
 
-helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+	helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 
-helm repo add grafana https://grafana.github.io/helm-charts
+	helm repo add grafana https://grafana.github.io/helm-charts
 
-helm repo update
+	helm repo update
 
 ###install and deploy prometheus to cluster
 
-helm install prometheus prometheus-community/prometheus
+	helm install prometheus prometheus-community/prometheus
 
 Note: both ‘prometheus-alertmanager’ and ‘prometheus-server’ pods will be in pending state because the created pv and pvc are yet to be bound.
 
 ###Update pvc with created pv’s "storageClassName" so they can be bound.
 
-kubectl edit pvc prometheus-server
+	kubectl edit pvc prometheus-server
 
 ###add “storageClassName: standard” as in below img
 
@@ -121,13 +121,13 @@ add the highlighted line in your pvc yaml file just as in img. Save and quit.
 
 ###do same here
 
-kubectl edit pvc storage-prometheus-alertmanager-0
+	kubectl edit pvc storage-prometheus-alertmanager-0
 
 ###verify that both pv and pvc are in ‘bound’ state
 
-Kubectl get pv
+	Kubectl get pv
 
-Kubectl get pvc
+	Kubectl get pvc
 
 ![Screenshot (195)](https://github.com/user-attachments/assets/c0807132-c708-45c1-bbc5-bf6997cae8cb)
 
@@ -136,7 +136,7 @@ Both ‘prometheus-alertmanager’ and ‘prometheus-server’ pods should be ru
 
 ###but if the ‘prometheus-server’ pod is in ‘CrashLoopBackOff’ state.
 
-Kubectl get pods
+	Kubectl get pods
 
 ![Screenshot (196)](https://github.com/user-attachments/assets/a0012040-6b54-4cea-97dc-cd1d717f2319)
 
@@ -145,7 +145,7 @@ prometheus-server in CrashLoopBackOff
 
 ###edit ‘prometheus-server’ deployment file
 
-kubectl edit deploy prometheus-server
+	kubectl edit deploy prometheus-server
 
 “
 
@@ -165,7 +165,7 @@ runAsUser: 0
 
 save and quit
 
-Kubectl get pods
+	Kubectl get pods
 
 ![Screenshot (201)](https://github.com/user-attachments/assets/4e2cdc47-6386-451e-921c-499bcd84cfa8)
 Prometheus-server pod now running
@@ -177,11 +177,11 @@ GRAFANA
 
 ###install and deploy grafana to the cluster
 
-helm install grafana grafana/grafana
+	helm install grafana grafana/grafana
 
 ###verify grafana pod is running
 
-kubectl get pods
+	kubectl get pods
 
 ![Screenshot (204)](https://github.com/user-attachments/assets/07488f1d-97ff-4053-acea-2d764b35c9ef)
 
@@ -189,14 +189,14 @@ kubectl get pods
 
 ###create NodePort service for  both ‘prometheus-server’ and ‘grafana’.
 
-kubectl expose service prometheus-server --type=NodePort --target-port=9090 --name=prometheus-servernodeport
+	kubectl expose service prometheus-server --type=NodePort --target-port=9090 --name=prometheus-servernodeport
 
-kubectl expose service grafana --type=NodePort --target-port=3000 --name=grafana-nodeport
+	kubectl expose service grafana --type=NodePort --target-port=3000 --name=grafana-nodeport
 
 
 ###verify NodePort service creation
 
-kubectl get svc | grep NodePort
+	kubectl get svc | grep NodePort
 
 ![Screenshot (206)](https://github.com/user-attachments/assets/5441a242-0c65-4851-b948-8bda767839a4)
 
@@ -212,7 +212,7 @@ Note: replace “32121” with yours
 
 ###run below command to get login password for grafana
 
-kubectl get secret --namespace default grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
+	kubectl get secret --namespace default grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
 
 ###username = admin
 
