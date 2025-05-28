@@ -114,6 +114,9 @@ kubectl edit pvc prometheus-server
 
 ###add “storageClassName: standard” as in below img
 
+![Screenshot (194)](https://github.com/user-attachments/assets/526c5194-ad74-4bd9-a2bb-679fadbcb51e)
+
+
 add the highlighted line in your pvc yaml file just as in img. Save and quit.
 
 ###do same here
@@ -126,11 +129,17 @@ Kubectl get pv
 
 Kubectl get pvc
 
+![Screenshot (195)](https://github.com/user-attachments/assets/c0807132-c708-45c1-bbc5-bf6997cae8cb)
+
+
 Both ‘prometheus-alertmanager’ and ‘prometheus-server’ pods should be running now because the created pv and pvc are in bound state.
 
 ###but if the ‘prometheus-server’ pod is in ‘CrashLoopBackOff’ state.
 
 Kubectl get pods
+
+![Screenshot (196)](https://github.com/user-attachments/assets/a0012040-6b54-4cea-97dc-cd1d717f2319)
+
 
 prometheus-server in CrashLoopBackOff
 
@@ -152,21 +161,16 @@ runAsUser: 0
 
 ###scroll to lines with the above and update value as ‘0’ (digit) as in above.
 
+![Screenshot (198)](https://github.com/user-attachments/assets/067bc516-6900-41fc-922b-fc9fddf5272a)
 
 save and quit
 
-
-
-
-
-
-
-
-
 Kubectl get pods
 
+![Screenshot (201)](https://github.com/user-attachments/assets/4e2cdc47-6386-451e-921c-499bcd84cfa8)
 Prometheus-server pod now running
 
+![Screenshot (214)](https://github.com/user-attachments/assets/82557986-7287-4a96-8eba-5fbb389ed72a)
 
 
 GRAFANA
@@ -178,6 +182,9 @@ helm install grafana grafana/grafana
 ###verify grafana pod is running
 
 kubectl get pods
+
+![Screenshot (204)](https://github.com/user-attachments/assets/07488f1d-97ff-4053-acea-2d764b35c9ef)
+
 
 
 ###create NodePort service for  both ‘prometheus-server’ and ‘grafana’.
@@ -191,12 +198,16 @@ kubectl expose service grafana --type=NodePort --target-port=3000 --name=grafana
 
 kubectl get svc | grep NodePort
 
+![Screenshot (206)](https://github.com/user-attachments/assets/5441a242-0c65-4851-b948-8bda767839a4)
+
 
 ###access grafana on 
 
 http://192.168.56.82:32121
 
 Note: replace “32121” with yours
+
+![Screenshot (207)](https://github.com/user-attachments/assets/78439d7e-257c-4cf1-94a9-3e83d7425726)
 
 
 ###run below command to get login password for grafana
@@ -207,18 +218,17 @@ kubectl get secret --namespace default grafana -o jsonpath="{.data.admin-passwor
 
 
 
-
-
-
 ###add ‘prometheus-server as data source in grafana
 
 -on grafana home page in the browser, goto datasource, select prometheus and add 'prometheus-server' as datasource with url 'http://prometheus-server' (prometheus-server = cluster service name for prometheus server)
 
 -then 'save and test' (must successfully query).
- 
+
+![Screenshot (210)](https://github.com/user-attachments/assets/1596cd2f-b5cf-4a23-b80e-87736d75c61b)
+
 Prometheus server url: http://prometheus-server
 
-
+![Screenshot (211)](https://github.com/user-attachments/assets/fc2cf4c1-ad17-47fb-accc-db984eb7188f)
 
 Prometheus server successfully queried after clicking ‘save & test’.
 
@@ -232,5 +242,6 @@ Prometheus server successfully queried after clicking ‘save & test’.
 
 -click on 'import dashboard', paste the copied id, select created data source and click on 'load'
 
+![Screenshot (213)](https://github.com/user-attachments/assets/5bd493de-7cd0-4b72-a76b-a9b9cebd2f18)
 
 Grafana dashborad for kubernetes created.
