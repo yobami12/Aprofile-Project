@@ -69,11 +69,19 @@ Step 3:
 
 ###on master node vm run:
 
+clone repo:
+
  	git clone -b main https://github.com/yobami12/Aprofile-Project.git
+
+cd to dir:
 
  	cd Aprofile-Project/def-files
 
+deploy application with manifest:
+
  	kubectl create -f .
+
+get pods:
 
  	Kubectl get all -n default
 
@@ -99,6 +107,8 @@ PROMETHEUS
 
 ###create PVs - on master node vm run:
 
+check created PVs:
+
 	kubectl get pv
 
 ![Screenshot (189)](https://github.com/user-attachments/assets/3452e201-c45a-4318-94d7-e637fa642c03)
@@ -106,9 +116,15 @@ PROMETHEUS
 
 ###add prometheus and grafana repo using helm cmd:
 
+add prometheus repo:
+
 	helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 
+add grafana repo:
+
 	helm repo add grafana https://grafana.github.io/helm-charts
+
+update repos:
 
 	helm repo update
 
@@ -135,9 +151,7 @@ add the highlighted line in your pvc yaml file just as in img. Save and quit.
 
 ###verify that both pv and pvc are in ‘bound’ state
 
-	Kubectl get pv
-
-	Kubectl get pvc
+	Kubectl get pv && Kubectl get pvc
 
 ![Screenshot (195)](https://github.com/user-attachments/assets/c0807132-c708-45c1-bbc5-bf6997cae8cb)
 
@@ -199,7 +213,11 @@ GRAFANA
 
 ###create NodePort service for  both ‘prometheus-server’ and ‘grafana’.
 
+create NodePort for prometheus:
+
 	kubectl expose service prometheus-server --type=NodePort --target-port=9090 --name=prometheus-servernodeport
+
+create NodePort for grafana:
 
 	kubectl expose service grafana --type=NodePort --target-port=3000 --name=grafana-nodeport
 
@@ -222,9 +240,13 @@ Note: replace “32121” with yours
 
 ###run below command to get login password for grafana
 
+###password:
+
 	kubectl get secret --namespace default grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
 
-###username = admin
+###username:
+
+	admin
 
 
 
