@@ -44,10 +44,17 @@ Vagrant.configure("2") do |config|
    worker01.vm.network "private_network", ip: "192.168.56.85"
    worker01.vm.network "public_network"
    worker01.vm.provider "virtualbox" do |vb|
+<<<<<<< HEAD
      vb.memory = "4096"
      vb.cpus = 2
    end
    worker01.vm.provision "shell", path: "docker.sh"
+=======
+     vb.memory = "2048"
+     vb.cpus = 2
+   end
+   worker00.vm.provision "shell", path: "docker.sh"
+>>>>>>> bf3a116f7a7c95827401c9041dc7acadc14b844a
    worker01.vm.provision "shell", path: "k8s-worker.sh"
    end
 end
