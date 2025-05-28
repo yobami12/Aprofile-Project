@@ -14,3 +14,4 @@ Step 1:
 
 ###On gitbash clone repo: 
 git clone -b main https://github.com/yobami12/Aprofile-Project.git
+cd Aprofile-Project/k8s-docker
