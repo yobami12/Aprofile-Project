@@ -1,4 +1,6 @@
+<p align="center">
 ***ON-PREM K8s CLUSTER USING VMs***
+</p>
 
 This project demonstrates the use of ‘kubeadm’ to deploy a Kubernetes cluster of 1 master and 2 worker nodes; also, multi-tier containerized web application deployed and monitoring with Prometheus and Grafana.
 
