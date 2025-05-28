@@ -50,6 +50,8 @@ Step 2:
 	
  Kubectl get nodes
 
+![Screenshot (182)](https://github.com/user-attachments/assets/17c6b3a3-1f54-4f33-862b-21404fbf192c)
+
 
 Step 3:
 
@@ -65,12 +67,16 @@ Step 3:
 
  Kubectl get all -n default
 
+![Screenshot (185)](https://github.com/user-attachments/assets/07755bc2-dec1-4256-82fe-eb57ef761920)
+
 
 ###test application on the browser with url:
 
  http://192.168.56.82:31933
 
 Note: “:31933” is the auto assigned port to the “app01-lb” in this cluster. Replace with yours.
+
+![Screenshot (187)](https://github.com/user-attachments/assets/2bb93ebf-4e31-43d3-a278-9afeccd7015e)
 
 	Username: admin_vp
 	Password: admin_vp
@@ -84,6 +90,9 @@ PROMETHEUS
 ###create PVs - on master node vm run:
 
 kubectl get pv
+
+![Screenshot (189)](https://github.com/user-attachments/assets/3452e201-c45a-4318-94d7-e637fa642c03)
+
 
 ###add prometheus and grafana repo using helm cmd:
 
