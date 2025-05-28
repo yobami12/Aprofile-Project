@@ -1,3 +1,0 @@
-JENKINS POD CREDENTIALS
-Username: admin
-pswd: d4aadf81291d486288938451a5176c2e
