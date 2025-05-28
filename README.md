@@ -89,7 +89,7 @@ PROMETHEUS
 
 ###create PVs - on master node vm run:
 
-kubectl get pv
+	kubectl get pv
 
 ![Screenshot (189)](https://github.com/user-attachments/assets/3452e201-c45a-4318-94d7-e637fa642c03)
 
