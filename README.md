@@ -19,8 +19,9 @@ Step 1:
 
 [create vms and initialize cluster with kubeadm]
 
-###On gitbash clone repo: 
+###Open gitbash on host pc and run:
 
+clone repo:
 	git clone -b main https://github.com/yobami12/Aprofile-Project.git
 
 	cd Aprofile-Project/k8s-docker
