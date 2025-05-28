@@ -13,7 +13,7 @@ Install
   -Vagrant
 
   
-NOTE: host pc should also have more than 120GB free disk space and 16GB ram
+NOTE: host pc should also have 100GB free disk space and 16GB ram or more
 
 Step 1:
 
