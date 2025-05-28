@@ -22,13 +22,22 @@ Step 1:
 ###Open gitbash on host pc and run:
 
 clone repo:
+
 	git clone -b main https://github.com/yobami12/Aprofile-Project.git
+
+cd to dir:
 
 	cd Aprofile-Project/k8s-docker
 
+install vagrant-disksize:
+
 	vagrant plugin install vagrant-disksize
 
+install vagrant-hostmanager:
+
 	vagrant plugin install vagrant-hostmanager
+
+spin up VMs:
 
 	vagrant up
 
