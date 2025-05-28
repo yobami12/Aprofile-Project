@@ -1,10 +1,10 @@
-*ON-PREM K8s CLUSTER USING VMs*
+***ON-PREM K8s CLUSTER USING VMs***
 
 This project demonstrates the use of ‘kubeadm’ to deploy a Kubernetes cluster of 1 master and 2 worker nodes; also, multi-tier containerized web application deployed and monitoring with Prometheus and Grafana.
 
-Prerequisites (host pc):
+**Prerequisites** (host pc):
 
-Install
+**Install**
 
   -Gitbash
   
@@ -13,9 +13,9 @@ Install
   -Vagrant
 
   
-NOTE: host pc should also have 100GB free disk space and 16GB ram or more
+**NOTE:** host pc should also have 100GB free disk space and 16GB ram or more
 
-Step 1:
+**Step 1:**
 
 [create vms and initialize cluster with kubeadm]
 
@@ -46,7 +46,7 @@ spin up VMs:
 
 ###reboot all vms
 
-Step 2:
+**Step 2:**
 
 [add worker nodes to the cluster]
 
@@ -63,7 +63,7 @@ Step 2:
 ![Screenshot (182)](https://github.com/user-attachments/assets/17c6b3a3-1f54-4f33-862b-21404fbf192c)
 
 
-Step 3:
+**Step 3:**
 
 [deploy multi-tier web application in ‘default’ namespace]
 
@@ -92,7 +92,7 @@ get pods:
 
  http://192.168.56.82:31933
 
-Note: “:31933” is the auto assigned port to the “app01-lb” in this cluster. Replace with yours.
+**Note:** “:31933” is the auto assigned port to the “app01-lb” in this cluster. Replace with yours.
 
 ![Screenshot (187)](https://github.com/user-attachments/assets/2bb93ebf-4e31-43d3-a278-9afeccd7015e)
 
@@ -100,11 +100,11 @@ Username and password:
 
 	admin_vp
 
-Step 4:
+**Step 4:**
 
 [deploy prometheus and grafana for monitoring]
 
-PROMETHEUS
+**PROMETHEUS**
 
 ###create PVs - on master node vm run:
 
@@ -133,7 +133,7 @@ update repos:
 
 	helm install prometheus prometheus-community/prometheus
 
-Note: both ‘prometheus-alertmanager’ and ‘prometheus-server’ pods will be in pending state because the created pv and pvc are yet to be bound.
+**Note:** both ‘prometheus-alertmanager’ and ‘prometheus-server’ pods will be in pending state because the created pv and pvc are yet to be bound.
 
 ###Update pvc with created pv’s "storageClassName" so they can be bound.
 
@@ -144,7 +144,7 @@ Note: both ‘prometheus-alertmanager’ and ‘prometheus-server’ pods will b
 ![Screenshot (194)](https://github.com/user-attachments/assets/526c5194-ad74-4bd9-a2bb-679fadbcb51e)
 
 
-add the highlighted line in your pvc yaml file just as in img. Save and quit.
+*add the highlighted line in your pvc yaml file just as in img. Save and quit.*
 
 ###do same here
 
@@ -157,7 +157,7 @@ add the highlighted line in your pvc yaml file just as in img. Save and quit.
 ![Screenshot (195)](https://github.com/user-attachments/assets/c0807132-c708-45c1-bbc5-bf6997cae8cb)
 
 
-Both ‘prometheus-alertmanager’ and ‘prometheus-server’ pods should be running now because the created pv and pvc are in bound state.
+*Both ‘prometheus-alertmanager’ and ‘prometheus-server’ pods should be running now because the created pv and pvc are in bound state.*
 
 ###but if the ‘prometheus-server’ pod is in ‘CrashLoopBackOff’ state.
 
@@ -166,7 +166,7 @@ Both ‘prometheus-alertmanager’ and ‘prometheus-server’ pods should be ru
 ![Screenshot (196)](https://github.com/user-attachments/assets/a0012040-6b54-4cea-97dc-cd1d717f2319)
 
 
-prometheus-server in CrashLoopBackOff
+*prometheus-server in CrashLoopBackOff*
 
 ###edit ‘prometheus-server’ deployment file
 
@@ -188,17 +188,17 @@ runAsUser: 0
 
 ![Screenshot (198)](https://github.com/user-attachments/assets/067bc516-6900-41fc-922b-fc9fddf5272a)
 
-save and quit
+*save and quit*
 
 	Kubectl get pods
 
 ![Screenshot (201)](https://github.com/user-attachments/assets/4e2cdc47-6386-451e-921c-499bcd84cfa8)
-Prometheus-server pod now running
+*Prometheus-server pod now running*
 
 ![Screenshot (214)](https://github.com/user-attachments/assets/82557986-7287-4a96-8eba-5fbb389ed72a)
 
 
-GRAFANA
+**GRAFANA**
 
 ###install and deploy grafana to the cluster
 
@@ -234,7 +234,7 @@ create NodePort for grafana:
 
 http://192.168.56.82:32121
 
-Note: replace “32121” with yours
+**Note:** replace “32121” with yours
 
 ![Screenshot (207)](https://github.com/user-attachments/assets/78439d7e-257c-4cf1-94a9-3e83d7425726)
 
@@ -259,11 +259,11 @@ Note: replace “32121” with yours
 
 ![Screenshot (210)](https://github.com/user-attachments/assets/1596cd2f-b5cf-4a23-b80e-87736d75c61b)
 
-Prometheus server url: http://prometheus-server
+*Prometheus server url: http://prometheus-server*
 
 ![Screenshot (211)](https://github.com/user-attachments/assets/fc2cf4c1-ad17-47fb-accc-db984eb7188f)
 
-Prometheus server successfully queried after clicking ‘save & test’.
+*Prometheus server successfully queried after clicking ‘save & test’.*
 
 
 
@@ -277,4 +277,4 @@ Prometheus server successfully queried after clicking ‘save & test’.
 
 ![Screenshot (213)](https://github.com/user-attachments/assets/5bd493de-7cd0-4b72-a76b-a9b9cebd2f18)
 
-Grafana dashborad for kubernetes created.
+*Grafana dashborad for kubernetes created.*
