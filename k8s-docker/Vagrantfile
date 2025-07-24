@@ -26,7 +26,7 @@ Vagrant.configure("2") do |config|
    end
 
   config.vm.define "worker00" do |worker00|
-   worker00.vm.box = "ubuntu/focal64"
+   worker00.vm.box = "eurolinux-vagrant/centos-stream-9"
    worker00.vm.hostname = "worker00"
    worker00.vm.network "private_network", ip: "192.168.56.84"
    worker00.vm.network "public_network"
@@ -34,8 +34,8 @@ Vagrant.configure("2") do |config|
      vb.memory = "4096"
      vb.cpus = 4
    end
-   worker00.vm.provision "shell", path: "docker.sh"
-   worker00.vm.provision "shell", path: "k8s-worker.sh"
+#   worker00.vm.provision "shell", path: "docker.sh"
+#   worker00.vm.provision "shell", path: "k8s-worker.sh"
    end
   
   config.vm.define "worker01" do |worker01|
