@@ -1,0 +1,7 @@
+:root { font-family: system-ui, sans-serif; color-scheme: light dark; }
+body { margin: 0; padding: 0; display: grid; place-items: center; min-height: 100vh; }
+main { width: min(900px, 92vw); display: grid; gap: 1rem; }
+.card { border: 1px solid #8884; border-radius: 12px; padding: 1rem; }
+input { margin-right: .5rem; padding: .5rem; }
+button { padding: .5rem 1rem; cursor: pointer; }
+pre { background: #0002; padding: .5rem; border-radius: 8px; }

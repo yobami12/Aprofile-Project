@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Microservices Demo</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main>
+      <h1>PHP + MariaDB Microservices</h1>
+      <section class="card">
+        <h2>Auth</h2>
+        <form id="loginForm">
+          <input name="username" placeholder="username" value="demo" />
+          <input name="password" placeholder="password" value="demo" type="password" />
+          <button type="submit">Login</button>
+        </form>
+        <pre id="authResult"></pre>
+      </section>
+
+      <section class="card">
+        <h2>Catalog</h2>
+        <button id="loadProducts">Load products</button>
+        <ul id="products"></ul>
+      </section>
+    </main>
+    <script src="/app.js"></script>
+  </body>
+</html>
