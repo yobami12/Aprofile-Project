@@ -203,7 +203,7 @@ echo "deb [signed-by=/usr/share/keyrings/helm.gpg] https://packages.buildkite.co
 sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
 
 sudo apt-get update
-sudo apt-get install helm
+sudo apt-get install helm -y
 helm version
 
 ###The below command is used to create ingress but that is after adding the worker node and metalLB to the cluster
